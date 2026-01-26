@@ -1,0 +1,209 @@
+{
+  "id": "level1",
+  "worldId": "world1",
+  "order": 1,
+  "title": "Hello, Python!",
+  "concept": "print() and strings",
+  "estimatedMinutes": 10,
+  "content": {
+    "introduction": "Every programmer's journey starts with a single line of code. In this lesson, you'll learn how to make Python talk using the print() function.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "The print() function is Python's way of displaying text on the screen. Whatever you put inside the parentheses gets printed out."
+      },
+      {
+        "type": "code",
+        "content": "print(\"Hello, World!\")",
+        "metadata": {
+          "output": "Hello, World!",
+          "highlightLines": [1],
+          "annotations": [
+            { "line": 1, "text": "print() displays whatever is inside the parentheses" }
+          ]
+        }
+      },
+      {
+        "type": "text",
+        "content": "Text in Python is called a \"string.\" You can create strings using either single quotes ('hello') or double quotes (\"hello\") — both work exactly the same way."
+      },
+      {
+        "type": "code",
+        "content": "print('Single quotes work!')\nprint(\"Double quotes work too!\")",
+        "metadata": {
+          "output": "Single quotes work!\nDouble quotes work too!"
+        }
+      },
+      {
+        "type": "callout",
+        "content": "You can print multiple things by separating them with commas. Python will add spaces between them automatically.",
+        "metadata": {
+          "variant": "tip"
+        }
+      },
+      {
+        "type": "code",
+        "content": "print(\"My name is\", \"PyQuest\")\nprint(\"I am\", 1, \"year old\")",
+        "metadata": {
+          "output": "My name is PyQuest\nI am 1 year old"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "print(\"Your text here\")",
+      "output": "Your text here",
+      "highlightLines": [1],
+      "annotations": [
+        { "line": 1, "text": "The text inside quotes is called a 'string'" }
+      ]
+    },
+    "commonMistakes": [
+      "Forgetting the parentheses: print \"hello\" won't work in Python 3. Always use print(\"hello\").",
+      "Mismatched quotes: print('hello\") will cause an error. Make sure your opening and closing quotes match.",
+      "Missing quotes around text: print(hello) without quotes looks for a variable named 'hello' instead of printing the word."
+    ],
+    "realWorldUse": "The print() function is used everywhere in programming — from debugging code to creating user interfaces in terminal applications. Every Python developer uses it daily."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "print(\"Welcome to PyQuest!\")",
+      "solution": "Welcome to PyQuest!",
+      "testCases": [],
+      "hints": [
+        "Look at the text between the quotation marks.",
+        "print() displays exactly what's inside the quotes."
+      ],
+      "explanation": "The print() function outputs the string exactly as written between the quotes.",
+      "options": [
+        "Welcome to PyQuest!",
+        "\"Welcome to PyQuest!\"",
+        "print(Welcome to PyQuest!)",
+        "Error"
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code to print \"Hello, World!\"",
+      "starterCode": "_____(\"Hello, World!\")",
+      "solution": "print(\"Hello, World!\")",
+      "testCases": [
+        {
+          "expectedOutput": "Hello, World!",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "Hello, World!",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Which function displays text on the screen?",
+        "The function name is 5 letters long and starts with 'p'."
+      ],
+      "explanation": "print() is the function that displays text output in Python."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code has a bug. Fix it so it prints the greeting correctly.",
+      "starterCode": "print(\"Hello, World!)",
+      "solution": "print(\"Hello, World!\")",
+      "testCases": [
+        {
+          "expectedOutput": "Hello, World!",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "Hello, World!",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Look carefully at the quotation marks.",
+        "Every opening quote needs a matching closing quote."
+      ],
+      "explanation": "The closing double quote was missing. Strings must have matching opening and closing quotes."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "Write code that prints your name on one line and \"is learning Python\" on the next line.",
+      "starterCode": "# Print your name on the first line\n# Print \"is learning Python\" on the second line\n",
+      "solution": "print(\"Alice\")\nprint(\"is learning Python\")",
+      "testCases": [
+        {
+          "expectedOutput": "/.+\\nis learning Python/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/is learning Python/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "You need two separate print() statements.",
+        "Each print() creates a new line automatically.",
+        "Your name can be anything — just put it in quotes!"
+      ],
+      "explanation": "Each print() statement outputs its text and automatically moves to a new line. Using two print() calls puts text on two separate lines."
+    },
+    {
+      "id": "ex5",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "prompt": "Which of these is the correct way to print text in Python 3?",
+      "solution": "print(\"Hello\")",
+      "testCases": [],
+      "hints": [
+        "Python 3 requires parentheses for print.",
+        "The text needs to be inside quotes."
+      ],
+      "explanation": "In Python 3, print() is a function that requires parentheses. The text must be wrapped in quotes (single or double).",
+      "options": [
+        "print \"Hello\"",
+        "echo(\"Hello\")",
+        "print(\"Hello\")",
+        "Print(\"Hello\")"
+      ]
+    }
+  ],
+  "challenge": {
+    "id": "challenge1",
+    "title": "Greeting Card",
+    "description": "Create a greeting card that prints a nice message! Your card should have at least 3 lines of output.",
+    "requirements": [
+      "Print at least 3 lines of text",
+      "Include a greeting word (like Hello, Welcome, or Hi)",
+      "Use at least one print() call with multiple values separated by commas"
+    ],
+    "starterCode": "# Create your greeting card!\n# Print at least 3 lines\n",
+    "testCases": [
+      {
+        "expectedOutput": "/.+\\n.+\\n.+/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(Hello|Welcome|Hi|Hey|Greetings)/i",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Add a decorative border using special characters (*, =, -, or #)",
+        "testCase": {
+          "expectedOutput": "/(\\*{3,}|={3,}|-{3,}|#{3,})/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}

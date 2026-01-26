@@ -1,3 +1,8 @@
+export interface ConsoleEntry {
+  type: 'stdout' | 'stderr' | 'result' | 'system';
+  text: string;
+}
+
 export interface ExecutionResult {
   success: boolean;
   stdout?: string;
