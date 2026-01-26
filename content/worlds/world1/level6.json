@@ -1,0 +1,227 @@
+{
+  "id": "level6",
+  "worldId": "world1",
+  "order": 6,
+  "title": "Print Formatting",
+  "concept": "Print formatting",
+  "estimatedMinutes": 10,
+  "content": {
+    "introduction": "You already know how to print text. Now it's time to control exactly how that text looks. Python's print() function has hidden powers — special parameters that let you change the separator between items and what happens at the end of a line.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "When you pass multiple values to print(), Python puts a space between each one by default. But you can change that with the sep parameter."
+      },
+      {
+        "type": "code",
+        "content": "print(\"A\", \"B\", \"C\")\nprint(\"A\", \"B\", \"C\", sep=\"-\")\nprint(\"A\", \"B\", \"C\", sep=\"\")",
+        "metadata": {
+          "output": "A B C\nA-B-C\nABC"
+        }
+      },
+      {
+        "type": "callout",
+        "content": "The sep parameter stands for 'separator'. It controls what goes between the items you print. Setting sep=\"\" (empty string) removes all spaces.",
+        "metadata": {
+          "variant": "tip"
+        }
+      },
+      {
+        "type": "text",
+        "content": "By default, print() adds a newline at the end, which is why each print() appears on its own line. You can change this with the end parameter."
+      },
+      {
+        "type": "code",
+        "content": "print(\"Loading\", end=\"\")\nprint(\"...\", end=\"\")\nprint(\"Done!\")",
+        "metadata": {
+          "output": "Loading...Done!"
+        }
+      },
+      {
+        "type": "text",
+        "content": "You can combine sep and end in the same print() call for full control over your output formatting."
+      },
+      {
+        "type": "code",
+        "content": "print(2025, 1, 15, sep=\"/\")\nprint(\"Price\", end=\": \")\nprint(\"$9.99\")",
+        "metadata": {
+          "output": "2025/1/15\nPrice: $9.99"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "print(value1, value2, sep=\"-\", end=\"!\\n\")",
+      "output": "value1-value2!",
+      "highlightLines": [1],
+      "annotations": [
+        { "line": 1, "text": "sep controls what goes between values; end controls what follows the output" }
+      ]
+    },
+    "commonMistakes": [
+      "Forgetting that sep and end need to be keyword arguments: print(\"a\", \"b\", \"-\") prints three items, while print(\"a\", \"b\", sep=\"-\") uses \"-\" as the separator.",
+      "Using end=\"\" and expecting a newline. When you set end=\"\", the next print() continues on the same line. Use end=\"\\n\" to add the newline back explicitly.",
+      "Confusing sep with string concatenation. sep only works between multiple arguments to print(), not within a single string."
+    ],
+    "realWorldUse": "Print formatting is essential for creating readable command-line output. It's used in log files, progress bars, data tables, and any program that displays formatted text to users. Understanding sep and end is the first step toward professional output formatting."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "print(\"red\", \"green\", \"blue\", sep=\", \")",
+      "solution": "red, green, blue",
+      "testCases": [],
+      "hints": [
+        "The sep parameter controls what goes between each value.",
+        "sep=\", \" puts a comma and a space between each word."
+      ],
+      "explanation": "The sep parameter replaces the default single space between arguments. Here, \", \" (comma followed by a space) is placed between each color name.",
+      "options": [
+        "red, green, blue",
+        "red green blue",
+        "red,green,blue",
+        "\"red\", \"green\", \"blue\""
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code so that the three words print on the same line with no spaces: \"HelloWorldPython\"",
+      "starterCode": "print(\"Hello\", \"World\", \"Python\", ___)",
+      "solution": "print(\"Hello\", \"World\", \"Python\", sep=\"\")",
+      "testCases": [
+        {
+          "expectedOutput": "HelloWorldPython",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/HelloWorldPython/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "You need to set the separator to an empty string.",
+        "Use sep=\"\" to remove all characters between the printed values."
+      ],
+      "explanation": "Setting sep=\"\" (an empty string) removes the default space between arguments, joining them directly together."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code should print \"2025/01/15\" as a date, but it's not working correctly. Fix it.",
+      "starterCode": "print(2025, \"01\", 15, sep=\"\")",
+      "solution": "print(2025, \"01\", 15, sep=\"/\")",
+      "testCases": [
+        {
+          "expectedOutput": "2025/01/15",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/2025\\/01\\/15/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Look at the separator — what character should go between the year, month, and day?",
+        "The sep should be \"/\" not an empty string."
+      ],
+      "explanation": "The separator was set to an empty string, which joins everything without any character between them. Changing sep to \"/\" places a forward slash between each value to create the date format."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "Use print() with the end parameter to print \"Countdown: 3...2...1...Go!\" all on one line using four separate print statements.",
+      "starterCode": "# Use end parameter to keep printing on the same line\n# First print: \"Countdown: 3\"\n# Second print: \"2\"\n# Third print: \"1\"\n# Fourth print: \"Go!\"\n",
+      "solution": "print(\"Countdown: 3\", end=\"...\")\nprint(\"2\", end=\"...\")\nprint(\"1\", end=\"...\")\nprint(\"Go!\")",
+      "testCases": [
+        {
+          "expectedOutput": "/Countdown: 3\\.\\.\\.2\\.\\.\\.1\\.\\.\\.Go!/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/3.*2.*1.*Go/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Use end=\"...\" to replace the newline with three dots.",
+        "The last print() can use the default end (newline) since nothing follows it."
+      ],
+      "explanation": "By setting end=\"...\" on the first three prints, each output is followed by three dots instead of a newline. The final print() uses the default newline ending."
+    },
+    {
+      "id": "ex5",
+      "type": "predict_output",
+      "difficulty": "hard",
+      "prompt": "What will this code output? Pay close attention to both sep and end.",
+      "starterCode": "print(\"X\", \"Y\", sep=\"+\", end=\"=\")\nprint(\"Z\")",
+      "solution": "X+Y=Z",
+      "testCases": [],
+      "hints": [
+        "The first print uses sep=\"+\" between X and Y, and end=\"=\" instead of a newline.",
+        "Since end=\"=\" replaces the newline, the second print continues on the same line."
+      ],
+      "explanation": "The first print() outputs \"X+Y\" (sep puts + between them), then \"=\" (end replaces the newline). The second print() continues on the same line with \"Z\", producing \"X+Y=Z\".",
+      "options": [
+        "X+Y=Z",
+        "X+Y=\nZ",
+        "X Y\nZ",
+        "X+Y\n=Z"
+      ]
+    }
+  ],
+  "challenge": {
+    "id": "challenge6",
+    "title": "Receipt Printer",
+    "description": "Format the output to look like a store receipt! Use sep and end parameters to control exactly how the text appears.",
+    "requirements": [
+      "Print a store name centered-ish at the top (e.g., \"PYTHON SHOP\")",
+      "Print a divider line using dashes (at least 20 dashes)",
+      "Print at least 3 items with their prices, using sep to format them (e.g., print(\"Apples\", \"$3.50\", sep=\"... \"))",
+      "Print another divider line",
+      "Print a total line"
+    ],
+    "starterCode": "# Store name\n\n# Divider\n\n# Items (use sep to format)\n\n# Divider\n\n# Total\n",
+    "testCases": [
+      {
+        "expectedOutput": "/PYTHON SHOP/i",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/-{20,}/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/\\$/",
+        "hidden": true
+      },
+      {
+        "expectedOutput": "/(Total|TOTAL|total)/",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Use the end parameter to print the store name and a subtitle (like 'Est. 2025') on the same line",
+        "testCase": {
+          "expectedOutput": "/PYTHON SHOP.*\\d{4}/i",
+          "hidden": false
+        },
+        "bonusXP": 10
+      },
+      {
+        "description": "Print item prices aligned using sep with dots (e.g., \"Apples...... $3.50\")",
+        "testCase": {
+          "expectedOutput": "/\\.{3,}.*\\$/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}

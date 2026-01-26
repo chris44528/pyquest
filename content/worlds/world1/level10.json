@@ -1,0 +1,243 @@
+{
+  "id": "level10",
+  "worldId": "world1",
+  "order": 10,
+  "title": "Boss Level: Mad Libs Generator",
+  "concept": "Combining all Python Basics concepts",
+  "estimatedMinutes": 15,
+  "content": {
+    "introduction": "Welcome to the World 1 Boss Level! Everything you've learned — variables, strings, f-strings, string methods, operators, type conversion, and slicing — comes together here. You'll prove your mastery by building a Mad Libs story generator that uses ALL of these skills.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "A Mad Libs generator creates funny stories by plugging variables into a template. To build one, you need to combine everything you've learned so far."
+      },
+      {
+        "type": "code",
+        "content": "# Variables (Level 2)\nname = \"Alice\"\nage = 12\ncity = \"Tokyo\"\n\n# String methods (Level 6)\nshout = name.upper()\n\n# Type conversion (Level 8)\nage_next_year = str(age + 1)\n\n# F-strings (Level 5)\nstory = f\"{shout} is {age} years old and lives in {city}.\"\nprint(story)",
+        "metadata": {
+          "output": "ALICE is 12 years old and lives in Tokyo."
+        }
+      },
+      {
+        "type": "callout",
+        "content": "This boss level tests multiple concepts in each exercise. If you get stuck, think about which concept each part of the problem is testing. You've already learned everything you need!",
+        "metadata": {
+          "variant": "tip"
+        }
+      },
+      {
+        "type": "text",
+        "content": "Here's how different concepts work together in a Mad Libs generator:"
+      },
+      {
+        "type": "code",
+        "content": "# Combining concepts\nhero = \"wizard\"\npower = 9001\nspell = \"abracadabra\"\n\n# String methods + f-strings\ntitle = f\"The Great {hero.title()}\"\nprint(title)\n\n# Operators + type conversion\nprint(f\"Power level: {power} (over {str(power - 1)}!)\")\n\n# Slicing + string methods\nsecret = spell[:5].upper()\nprint(f\"Secret code: {secret}\")",
+        "metadata": {
+          "output": "The Great Wizard\nPower level: 9001 (over 9000!)\nSecret code: ABRAC"
+        }
+      },
+      {
+        "type": "code",
+        "content": "# Building multi-line stories\ncharacter = \"dragon\"\ncolor = \"purple\"\nsize = 50\nfood = \"tacos\"\n\nprint(f\"Once upon a time, a {color} {character} appeared.\")\nprint(f\"It was {size} feet tall and {size * 2} feet long!\")\nprint(f\"Its favorite food was {food.upper()}.\")\nprint(f\"Everyone called it the {color.title()} {character.title()}.\")\nprint(f\"\\\"{food.capitalize()}!\\\" it roared. \\\"{food}! {food}!\\\"\")",
+        "metadata": {
+          "output": "Once upon a time, a purple dragon appeared.\nIt was 50 feet tall and 100 feet long!\nIts favorite food was TACOS.\nEveryone called it the Purple Dragon.\n\"Tacos!\" it roared. \"tacos! tacos!\""
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "noun = \"robot\"\nadj = \"shiny\"\nnum = 7\nverb = \"danced\"\nprint(f\"The {adj} {noun} {verb} {num} times!\")\nprint(f\"Its name was {noun.upper()}-{str(num * 100)}\")",
+      "output": "The shiny robot danced 7 times!\nIts name was ROBOT-700",
+      "highlightLines": [5, 6],
+      "annotations": [
+        { "line": 5, "text": "F-string with variables — concepts from Levels 2 and 5" },
+        { "line": 6, "text": "String methods + type conversion + operators — Levels 6, 8, and 4" }
+      ]
+    },
+    "commonMistakes": [
+      "Forgetting to convert numbers with str() when concatenating with +. Use f-strings instead: f\"age: {age}\" handles conversion automatically.",
+      "Mixing up string methods: .upper() returns ALL CAPS, .title() returns Title Case, .capitalize() only uppercases the First letter.",
+      "Forgetting that string methods return NEW strings — they don't change the original. You need to save the result: name = name.upper()."
+    ],
+    "realWorldUse": "Mad Libs generators are a fun example of template-based text generation — the same technique used in email templates, automated reports, chatbots, and even AI text generation. Combining variables, formatting, and string manipulation is a core skill in every programming domain."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "animal = \"cat\"\ncount = 3\nprint(f\"I have {count} {animal}s and {count * 2} dogs.\")\nprint(f\"My favorite: {animal.upper()}!\")",
+      "solution": "I have 3 cats and 6 dogs.\nMy favorite: CAT!",
+      "testCases": [],
+      "hints": [
+        "f-strings evaluate expressions inside {}. count * 2 = 6.",
+        ".upper() converts the entire string to uppercase letters."
+      ],
+      "explanation": "The f-string inserts count (3), the animal (\"cat\"), and count * 2 (6). The second line uses .upper() to turn \"cat\" into \"CAT\".",
+      "options": [
+        "I have 3 cats and 6 dogs.\nMy favorite: CAT!",
+        "I have 3 cats and 6 dogs.\nMy favorite: Cat!",
+        "I have count cats and count * 2 dogs.\nMy favorite: CAT!",
+        "I have 3 cats and 33 dogs.\nMy favorite: CAT!"
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code so it prints \"HELLO from index 0: h\" using the variable, a string method, and string indexing.",
+      "starterCode": "word = \"hello\"\nprint(f\"{word._____()} from index 0: {word[___]}\")",
+      "solution": "word = \"hello\"\nprint(f\"{word.upper()} from index 0: {word[0]}\")",
+      "testCases": [
+        {
+          "expectedOutput": "HELLO from index 0: h",
+          "hidden": false
+        }
+      ],
+      "hints": [
+        "Which string method converts all letters to uppercase?",
+        "The first character of a string is at index 0."
+      ],
+      "explanation": "word.upper() converts \"hello\" to \"HELLO\". word[0] gets the first character 'h'. Note that .upper() returns a new string but doesn't change the original, so word[0] is still lowercase 'h'."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This Mad Libs code has 3 bugs. Fix them all so the output matches the expected result:\n\"Dr. STRANGE saved the day in 2.5 hours!\"",
+      "starterCode": "hero = \"strange\"\nhours = \"2.5\"\nprint(f\"Dr. {hero.capitalize()} saved the day in {hours} hours!\")",
+      "solution": "hero = \"strange\"\nhours = \"2.5\"\nprint(f\"Dr. {hero.upper()} saved the day in {hours} hours!\")",
+      "testCases": [
+        {
+          "expectedOutput": "/Dr\\. STRANGE saved the day in 2\\.5 hours!/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/STRANGE/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "The expected output shows \"STRANGE\" in all caps, but .capitalize() only capitalizes the first letter.",
+        "Which string method converts ALL letters to uppercase?"
+      ],
+      "explanation": "The bug is using .capitalize() instead of .upper(). capitalize() gives \"Strange\" but we need \"STRANGE\". The fix is hero.upper()."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "Create a character profile card that combines multiple concepts. Define variables for a character name, age (as integer), and a catchphrase. Then print:\n1. The name in title case\n2. \"Age: \" followed by the age, then \" (\" age+10 \" in 10 years)\"\n3. The catchphrase in uppercase\n4. The catchphrase reversed",
+      "starterCode": "# Define your character\nname = \"dark knight\"\nage = 30\ncatchphrase = \"justice never sleeps\"\n\n# Print the character card\n",
+      "solution": "name = \"dark knight\"\nage = 30\ncatchphrase = \"justice never sleeps\"\n\nprint(name.title())\nprint(f\"Age: {age} ({age + 10} in 10 years)\")\nprint(catchphrase.upper())\nprint(catchphrase[::-1])",
+      "testCases": [
+        {
+          "expectedOutput": "/Dark Knight/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/Age: 30 \\(40 in 10 years\\)/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/JUSTICE NEVER SLEEPS/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/speels reven ecitsuj/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Use .title() for title case, .upper() for all caps, and [::-1] to reverse a string.",
+        "For the age line, use an f-string with arithmetic: f\"Age: {age} ({age + 10} in 10 years)\"."
+      ],
+      "explanation": "This exercise combines variables, f-strings with arithmetic, string methods (.title(), .upper()), and string slicing ([::-1]) all in one solution."
+    },
+    {
+      "id": "ex5",
+      "type": "write_code",
+      "difficulty": "hard",
+      "prompt": "Build a mini story using ALL of these concepts:\n- At least 3 variables (including at least one number)\n- An f-string with an arithmetic expression\n- At least 2 different string methods\n- String slicing (extract part of a string OR reverse it)\n- Type conversion (use str(), int(), or float() at least once)\n\nThe story must be at least 4 lines and include at least one line that combines 3+ concepts.",
+      "starterCode": "# Your mini Mad Libs story\n# Use variables, f-strings, string methods, slicing, and type conversion!\n\n",
+      "solution": "hero = \"captain code\"\nsidekick = \"byte\"\npower_level = 9000\nyear = \"3025\"\n\nprint(f\"In the year {int(year) + 1}, {hero.title()} rose to power.\")\nprint(f\"With a power level of {power_level * 2}, nobody could stop them!\")\nprint(f\"Their sidekick {sidekick.upper()} decoded the secret: {hero[:7].upper()}\")\nprint(f\"Together they saved {str(power_level)[0]}0 cities.\")\nprint(f\"\\\"{hero.title()}!\\\" cheered the crowd. \\\"{sidekick[::-1].upper()}!\\\"\")",
+      "testCases": [
+        {
+          "expectedOutput": "/.+\\n.+\\n.+\\n.+/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/(int|float|str).*[.](upper|lower|title|capitalize|replace|strip)/s",
+          "hidden": true
+        },
+        {
+          "expectedOutput": "/.{20,}\\n.{20,}/",
+          "hidden": false
+        }
+      ],
+      "hints": [
+        "Start with 3+ variables, then build f-string sentences that use methods and operators inside the curly braces.",
+        "You can combine concepts in one line: f\"{name.upper()} scored {int(score_str) * 2} points\" uses f-strings, methods, conversion, and math."
+      ],
+      "explanation": "This exercise requires combining ALL World 1 concepts: variables hold data, f-strings format output, string methods transform text, slicing extracts substrings, arithmetic operators do math, and type conversion bridges types."
+    }
+  ],
+  "challenge": {
+    "id": "challenge10",
+    "title": "Mad Libs Generator",
+    "description": "Create an epic Mad Libs story generator! Build a multi-line story that showcases every Python basics concept you've learned in World 1. Your generator should use variables as fill-in-the-blank words, then weave them into a creative story using all your Python skills.",
+    "requirements": [
+      "Use at least 5 variables (mix of strings and numbers)",
+      "Use f-strings to build the story",
+      "Use at least 2 different string methods (upper, lower, title, capitalize, replace, etc.)",
+      "Generate at least 5 lines of output",
+      "Use arithmetic operators in at least one line"
+    ],
+    "starterCode": "# === MAD LIBS GENERATOR ===\n# Fill in these variables to create your story!\n\n# Characters\nhero = \"super coder\"\nvillain = \"bug monster\"\nsidekick = \"debug duck\"\n\n# Numbers\npower = 9000\nyears = 100\n\n# Setting\nplace = \"silicon valley\"\n\n# Build your Mad Libs story below!\n# Use f-strings, string methods, operators, slicing, and type conversion!\n\nprint(\"=\" * 30)\nprint(f\"THE TALE OF {hero.upper()}\")\nprint(\"=\" * 30)\n\n# Add at least 5 more lines to complete the story!\n",
+    "testCases": [
+      {
+        "expectedOutput": "/.+\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+\\n.+/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/SUPER CODER|super coder|Super Coder/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(9000|9001|18000|100|101)/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(\\.[a-z]+\\(|upper|lower|title|capitalize|replace)/",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Use type conversion (str(), int(), or float()) somewhere in the story",
+        "testCase": {
+          "expectedOutput": "/(\\d+\\.0|\\d{4,})/",
+          "hidden": false
+        },
+        "bonusXP": 15
+      },
+      {
+        "description": "Use string slicing to create a secret code or acronym from one of your variables",
+        "testCase": {
+          "expectedOutput": "/(code|secret|acronym|S\\.C\\.|B\\.M\\.|SUP|BUG|DEB)/i",
+          "hidden": false
+        },
+        "bonusXP": 10
+      },
+      {
+        "description": "Create a decorative border using string multiplication (e.g., '=' * 30)",
+        "testCase": {
+          "expectedOutput": "/(={10,}|\\*{10,}|-{10,}|#{10,})/",
+          "hidden": false
+        },
+        "bonusXP": 5
+      }
+    ]
+  }
+}

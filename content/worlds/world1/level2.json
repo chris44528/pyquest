@@ -1,0 +1,216 @@
+{
+  "id": "level2",
+  "worldId": "world1",
+  "order": 2,
+  "title": "Boxes for Your Data",
+  "concept": "Variables and assignment",
+  "estimatedMinutes": 12,
+  "content": {
+    "introduction": "Imagine you have labeled boxes where you can store things. In Python, variables work the same way -- they're named containers that hold values you can use later.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "A variable is a name that refers to a value. You create one using the = sign, called the assignment operator. The name goes on the left, and the value goes on the right."
+      },
+      {
+        "type": "code",
+        "content": "score = 100\nplayer = \"Hero\"\nprint(score)\nprint(player)",
+        "metadata": {
+          "output": "100\nHero",
+          "highlightLines": [1, 2],
+          "annotations": [
+            { "line": 1, "text": "Creates a variable named 'score' holding the number 100" },
+            { "line": 2, "text": "Creates a variable named 'player' holding the text \"Hero\"" }
+          ]
+        }
+      },
+      {
+        "type": "text",
+        "content": "Variables can change! You can reassign a variable to a new value at any time. The old value is simply replaced."
+      },
+      {
+        "type": "code",
+        "content": "lives = 3\nprint(lives)\nlives = 2\nprint(lives)",
+        "metadata": {
+          "output": "3\n2"
+        }
+      },
+      {
+        "type": "callout",
+        "content": "Variable names must start with a letter or underscore, and can only contain letters, numbers, and underscores. They are also case-sensitive: Score and score are different variables!",
+        "metadata": {
+          "variant": "tip"
+        }
+      },
+      {
+        "type": "code",
+        "content": "x = 5\ny = 10\nprint(x + y)\nprint(x * y)",
+        "metadata": {
+          "output": "15\n50"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "variable_name = value",
+      "output": "",
+      "highlightLines": [1],
+      "annotations": [
+        { "line": 1, "text": "The = sign assigns the value on the right to the name on the left" }
+      ]
+    },
+    "commonMistakes": [
+      "Using = to compare instead of assign: In Python, = assigns a value, while == compares two values.",
+      "Starting a variable name with a number: 1st_place is not allowed. Use first_place instead.",
+      "Using spaces in variable names: my score is not valid. Use my_score with an underscore.",
+      "Forgetting that variable names are case-sensitive: Name and name are two different variables."
+    ],
+    "realWorldUse": "Variables are the foundation of every program. Games store player scores, apps store usernames, and websites store login status -- all using variables."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "greeting = \"Hello\"\nprint(greeting)",
+      "solution": "Hello",
+      "testCases": [],
+      "hints": [
+        "The variable 'greeting' is assigned the text \"Hello\".",
+        "print() displays the value stored in the variable, not the variable name."
+      ],
+      "explanation": "The variable greeting holds the string \"Hello\". When you print a variable, Python displays its value, not its name.",
+      "options": [
+        "Hello",
+        "greeting",
+        "\"Hello\"",
+        "Error"
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code so it stores your age in a variable and prints it.",
+      "starterCode": "age _____ 25\nprint(age)",
+      "solution": "age = 25\nprint(age)",
+      "testCases": [
+        {
+          "expectedOutput": "25",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/^25$/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Which symbol assigns a value to a variable?",
+        "The assignment operator is a single equals sign: ="
+      ],
+      "explanation": "The = operator assigns the value 25 to the variable age. Then print(age) displays that value."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code should print the total price, but it has a bug. Find and fix it.",
+      "starterCode": "price = 10\ntax = 2\ntotal = price\nprint(total)",
+      "solution": "price = 10\ntax = 2\ntotal = price + tax\nprint(total)",
+      "testCases": [
+        {
+          "expectedOutput": "12",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/^12$/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "The total should include both the price and the tax.",
+        "Use the + operator to add price and tax together when assigning to total."
+      ],
+      "explanation": "The bug was that total was only assigned the value of price. To get the total price, you need to add price + tax."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "Create two variables: 'width' set to 8 and 'height' set to 5. Then create a variable 'area' that multiplies them together, and print the area.",
+      "starterCode": "# Create width and height variables\n# Calculate the area (width * height)\n# Print the result\n",
+      "solution": "width = 8\nheight = 5\narea = width * height\nprint(area)",
+      "testCases": [
+        {
+          "expectedOutput": "40",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/^40$/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Start by creating width = 8 and height = 5 on separate lines.",
+        "Use the * operator to multiply width and height.",
+        "Store the result in a variable called area, then print it."
+      ],
+      "explanation": "Variables can store the result of calculations. Here, area = width * height computes 8 * 5 = 40 and stores it in area."
+    },
+    {
+      "id": "ex5",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "prompt": "Which of the following is NOT a valid Python variable name?",
+      "solution": "2nd_player",
+      "testCases": [],
+      "hints": [
+        "Variable names cannot start with a number.",
+        "Letters, underscores, and numbers are all allowed -- but check what comes first."
+      ],
+      "explanation": "Variable names cannot start with a number. '2nd_player' is invalid because it begins with '2'. All the other options are valid: they start with a letter or underscore.",
+      "options": [
+        "player_score",
+        "_hidden",
+        "2nd_player",
+        "myVariable"
+      ]
+    }
+  ],
+  "challenge": {
+    "id": "challenge2",
+    "title": "Variable Swap",
+    "description": "Swap the values of two variables without using a third temporary variable. Start with a = 7 and b = 3, and make a hold 3 and b hold 7.",
+    "requirements": [
+      "Start with a = 7 and b = 3",
+      "Swap their values so a becomes 3 and b becomes 7",
+      "Print both values to show the swap worked",
+      "Do NOT create any extra variables (no temp, no t, no c, etc.)"
+    ],
+    "starterCode": "a = 7\nb = 3\n# Swap a and b without using a third variable\n\nprint(\"a =\", a)\nprint(\"b =\", b)\n",
+    "testCases": [
+      {
+        "expectedOutput": "/a = 3/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/b = 7/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/a = 3\\nb = 7/",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Use Python's tuple unpacking syntax (a, b = b, a) for an elegant one-line swap",
+        "testCase": {
+          "expectedOutput": "/a = 3[\\s\\S]*b = 7/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}

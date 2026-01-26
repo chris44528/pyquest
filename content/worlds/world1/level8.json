@@ -1,0 +1,228 @@
+{
+  "id": "level8",
+  "worldId": "world1",
+  "order": 8,
+  "title": "Shape Shifter",
+  "concept": "Type conversion",
+  "estimatedMinutes": 10,
+  "content": {
+    "introduction": "In Python, data comes in different types — numbers, text, decimals, and even True/False values. Sometimes you need to convert between them. This lesson teaches you how to shape-shift your data from one type to another!",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "Python has built-in functions to convert data between types. The most common are int(), str(), float(), and bool()."
+      },
+      {
+        "type": "code",
+        "content": "age = \"25\"\nprint(type(age))        # It's a string!\nage_number = int(age)\nprint(type(age_number)) # Now it's an integer!\nprint(age_number + 5)   # Math works now!",
+        "metadata": {
+          "output": "<class 'str'>\n<class 'int'>\n30"
+        }
+      },
+      {
+        "type": "text",
+        "content": "int() converts to a whole number, float() converts to a decimal number, str() converts anything to text, and bool() converts to True or False."
+      },
+      {
+        "type": "code",
+        "content": "# str() turns anything into text\npoints = 100\nmessage = \"You earned \" + str(points) + \" points!\"\nprint(message)\n\n# float() creates decimal numbers\nwhole = 7\ndecimal = float(whole)\nprint(decimal)",
+        "metadata": {
+          "output": "You earned 100 points!\n7.0"
+        }
+      },
+      {
+        "type": "callout",
+        "content": "Be careful! Not every conversion works. int(\"hello\") will crash because Python can't turn the word \"hello\" into a number. Only strings that look like numbers can be converted, like int(\"42\").",
+        "metadata": {
+          "variant": "warning"
+        }
+      },
+      {
+        "type": "text",
+        "content": "The bool() function has interesting rules. Most values are True, but a few are False: 0, 0.0, empty string \"\", and None."
+      },
+      {
+        "type": "code",
+        "content": "print(bool(1))       # Non-zero = True\nprint(bool(0))       # Zero = False\nprint(bool(\"hello\")) # Non-empty string = True\nprint(bool(\"\"))      # Empty string = False",
+        "metadata": {
+          "output": "True\nFalse\nTrue\nFalse"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "text_num = \"42\"\nreal_num = int(text_num)\nprint(real_num + 8)",
+      "output": "50",
+      "highlightLines": [2],
+      "annotations": [
+        { "line": 1, "text": "A string that looks like a number" },
+        { "line": 2, "text": "int() converts the string to an integer" },
+        { "line": 3, "text": "Now we can do math with it!" }
+      ]
+    },
+    "commonMistakes": [
+      "Trying to add a string and number without converting: \"Score: \" + 10 causes a TypeError. Use str(10) first.",
+      "Using int() on a decimal string: int(\"3.14\") will crash. Convert to float first, then to int: int(float(\"3.14\")).",
+      "Forgetting that int() truncates (cuts off) decimals instead of rounding: int(9.9) gives 9, not 10."
+    ],
+    "realWorldUse": "Type conversion is essential in real apps. When you read user input from a form, it arrives as text — you must convert it to a number before doing calculations. Every calculator app, shopping cart, and data analysis tool relies on type conversion."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "x = \"10\"\ny = \"20\"\nprint(x + y)",
+      "solution": "1020",
+      "testCases": [],
+      "hints": [
+        "Both x and y are strings (they have quotes around them).",
+        "When you use + with strings, it concatenates (joins) them together, not adds them."
+      ],
+      "explanation": "Since x and y are strings, the + operator concatenates them instead of adding numerically. \"10\" + \"20\" becomes \"1020\".",
+      "options": [
+        "30",
+        "1020",
+        "10 20",
+        "Error"
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code so it converts the string to an integer and prints 50.",
+      "starterCode": "text = \"42\"\nnumber = ___(text)\nprint(number + 8)",
+      "solution": "text = \"42\"\nnumber = int(text)\nprint(number + 8)",
+      "testCases": [
+        {
+          "expectedOutput": "50",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/50/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "You need a function that converts a string to a whole number.",
+        "The function name is three letters: i-n-t."
+      ],
+      "explanation": "int() converts the string \"42\" to the integer 42. Then 42 + 8 = 50."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code is supposed to print \"Your score: 95\" but it crashes with a TypeError. Fix it!",
+      "starterCode": "score = 95\nmessage = \"Your score: \" + score\nprint(message)",
+      "solution": "score = 95\nmessage = \"Your score: \" + str(score)\nprint(message)",
+      "testCases": [
+        {
+          "expectedOutput": "/Your score: 95/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/95/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "You can't use + to join a string and an integer directly.",
+        "Convert the number to a string using str() before concatenating."
+      ],
+      "explanation": "Python can't concatenate a string with an integer using +. You need str(score) to convert 95 to \"95\" first."
+    },
+    {
+      "id": "ex4",
+      "type": "predict_output",
+      "difficulty": "medium",
+      "prompt": "What will this code print?",
+      "starterCode": "print(bool(0))\nprint(bool(\"False\"))\nprint(bool(\"\"))",
+      "solution": "False\nTrue\nFalse",
+      "testCases": [],
+      "hints": [
+        "bool(0) converts zero to a boolean. Zero is falsy.",
+        "\"False\" is a non-empty string. Any non-empty string is truthy, regardless of its content!"
+      ],
+      "explanation": "bool(0) is False because 0 is falsy. bool(\"False\") is True because it's a non-empty string (the word inside doesn't matter!). bool(\"\") is False because an empty string is falsy.",
+      "options": [
+        "False\nFalse\nFalse",
+        "False\nTrue\nFalse",
+        "True\nTrue\nFalse",
+        "False\nTrue\nTrue"
+      ]
+    },
+    {
+      "id": "ex5",
+      "type": "write_code",
+      "difficulty": "hard",
+      "prompt": "Write code that takes the string \"3.14\", converts it to a float, then converts that float to an integer, and prints all three values on separate lines. The output should be:\n3.14\n3.14\n3",
+      "starterCode": "# Start with this string\ntext = \"3.14\"\n\n# Convert to float and print it\n\n# Convert the float to int and print it\n",
+      "solution": "text = \"3.14\"\nprint(text)\ndecimal = float(text)\nprint(decimal)\nwhole = int(decimal)\nprint(whole)",
+      "testCases": [
+        {
+          "expectedOutput": "/3\\.14/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/\\n3$/m",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/3\\.14.*\\n3\\.14.*\\n3/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "First print the original string, then use float() to convert it to a decimal number.",
+        "Use int() on the float value (not the original string!) to get a whole number. Remember, int() truncates decimals."
+      ],
+      "explanation": "You can't go directly from \"3.14\" to int — int(\"3.14\") would crash. You need to first convert to float, then to int. int() truncates the decimal, so 3.14 becomes 3."
+    }
+  ],
+  "challenge": {
+    "id": "challenge8",
+    "title": "Data Converter",
+    "description": "Build a data converter that takes different values and converts them between types! Show the original value, its type, the converted value, and the new type.",
+    "requirements": [
+      "Convert at least 3 different values between types",
+      "Print each conversion showing the before and after",
+      "Use at least 3 different conversion functions (int, float, str, bool)",
+      "Output at least 4 lines"
+    ],
+    "starterCode": "# Data Converter\n# Convert values between types and show the results\n\n# Example: Convert a string to an integer\ntext_age = \"25\"\n\n# Your conversions here!\n",
+    "testCases": [
+      {
+        "expectedOutput": "/.+\\n.+\\n.+\\n.+/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(int|float|str|bool)/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(int|float|str|bool).*(int|float|str|bool).*(int|float|str|bool)/s",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Include a bool() conversion that demonstrates a truthy and a falsy value",
+        "testCase": {
+          "expectedOutput": "/(True|False).*\\n.*(True|False)/s",
+          "hidden": false
+        },
+        "bonusXP": 10
+      },
+      {
+        "description": "Show the type of each value using type()",
+        "testCase": {
+          "expectedOutput": "/<class '/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}
