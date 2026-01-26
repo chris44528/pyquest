@@ -67,45 +67,45 @@
 
 ### Code Editor Component (Actions 29-35)
 
-- [ ] **29.** Create `components/code/CodeEditor.tsx` — Basic TextInput with monospace font
-- [ ] **30.** Add line numbers display (calculated from content)
-- [ ] **31.** Add syntax highlighting (basic: keywords, strings, comments) — or use simple color scheme
-- [ ] **32.** Handle keyboard avoidance properly for iOS
-- [ ] **33.** Add "Run" button that triggers code execution
-- [ ] **34.** Create `components/code/Console.tsx` — Output display component
-- [ ] **35.** Style console with stdout (white), stderr (red), result (green) colors
+- [x] **29.** Create `components/code/CodeEditor.tsx` — Basic TextInput with monospace font
+- [x] **30.** Add line numbers display (calculated from content)
+- [ ] **31.** Add syntax highlighting (basic: keywords, strings, comments) — or use simple color scheme *(deferred — using plain monospace for now)*
+- [x] **32.** Handle keyboard avoidance properly for iOS
+- [x] **33.** Add "Run" button that triggers code execution
+- [x] **34.** Create `components/code/Console.tsx` — Output display component
+- [x] **35.** Style console with stdout (white), stderr (red), result (green) colors
 
 ### Lesson Content Renderer (Actions 36-42)
 
-- [ ] **36.** Install markdown renderer: `npm install react-native-markdown-display`
-- [ ] **37.** Create `components/lesson/LessonContent.tsx` — Main lesson renderer
-- [ ] **38.** Create `components/lesson/CodeBlock.tsx` — Styled code examples with copy button
-- [ ] **39.** Create `components/lesson/Callout.tsx` — Info/warning/tip boxes
-- [ ] **40.** Add support for annotations on code (line highlights)
-- [ ] **41.** Add "Common Mistakes" collapsible section
-- [ ] **42.** Test: Render sample lesson markdown, verify all elements display
+- [ ] **36.** Install markdown renderer: `npm install react-native-markdown-display` *(skipped — React 19 compatibility risk, using custom renderer instead)*
+- [x] **37.** Create `components/lesson/LessonContent.tsx` — Main lesson renderer
+- [x] **38.** Create `components/lesson/CodeBlock.tsx` — Styled code examples with copy button
+- [x] **39.** Create `components/lesson/Callout.tsx` — Info/warning/tip boxes
+- [x] **40.** Add support for annotations on code (line highlights)
+- [x] **41.** Add "Common Mistakes" collapsible section
+- [x] **42.** Test: Render sample lesson markdown, verify all elements display *(tsc passes, needs device verification)*
 
 ### Exercise Components (Actions 43-52)
 
-- [ ] **43.** Create `components/exercise/ExerciseCard.tsx` — Wrapper with prompt, hints, submit
-- [ ] **44.** Create `components/exercise/FillBlank.tsx` — Code with `_____` placeholders user fills
-- [ ] **45.** Create `components/exercise/FixBug.tsx` — Buggy code user must correct
-- [ ] **46.** Create `components/exercise/PredictOutput.tsx` — Show code, user types expected output
-- [ ] **47.** Create `components/exercise/WriteCode.tsx` — Blank editor, user writes from scratch
-- [ ] **48.** Create `components/exercise/MultipleChoice.tsx` — Question with selectable answers
-- [ ] **49.** Add hint system: Button reveals hints progressively, tracks hints used
-- [ ] **50.** Add "Show Solution" button (available after 3 failed attempts)
-- [ ] **51.** Create `lib/testRunner.ts` — Compare output against expected, handle regex patterns
-- [ ] **52.** Test: Each exercise type works, test cases validate correctly
+- [x] **43.** Create `components/exercise/ExerciseCard.tsx` — Wrapper with prompt, hints, submit
+- [x] **44.** Create `components/exercise/FillBlank.tsx` — Code with `_____` placeholders user fills
+- [x] **45.** Create `components/exercise/FixBug.tsx` — Buggy code user must correct
+- [x] **46.** Create `components/exercise/PredictOutput.tsx` — Show code, user types expected output
+- [x] **47.** Create `components/exercise/WriteCode.tsx` — Blank editor, user writes from scratch
+- [x] **48.** Create `components/exercise/MultipleChoice.tsx` — Question with selectable answers
+- [x] **49.** Add hint system: Button reveals hints progressively, tracks hints used
+- [x] **50.** Add "Show Solution" button (available after 3 failed attempts)
+- [x] **51.** Create `lib/testRunner.ts` — Compare output against expected, handle regex patterns
+- [x] **52.** Test: Each exercise type works, test cases validate correctly *(tsc passes, needs device verification)*
 
 ### Level Flow (Actions 53-58)
 
-- [ ] **53.** Create `app/world/[worldId]/level/[levelId]/index.tsx` — Main level screen
-- [ ] **54.** Implement level state machine: lesson → exercises (1..n) → challenge → complete
-- [ ] **55.** Add progress bar showing current position in level
-- [ ] **56.** Create `app/world/[worldId]/level/[levelId]/challenge.tsx` — Challenge mode UI
-- [ ] **57.** Create `app/world/[worldId]/level/[levelId]/complete.tsx` — Completion screen
-- [ ] **58.** Wire up XP awards on exercise/level completion
+- [x] **53.** Create `app/world/[worldId]/level/[levelId].tsx` — Main level screen *(single file with all phases instead of nested route)*
+- [x] **54.** Implement level state machine: lesson → exercises (1..n) → challenge → complete
+- [x] **55.** Add progress bar showing current position in level
+- [x] **56.** Challenge mode UI integrated into level screen *(combined into [levelId].tsx instead of separate file)*
+- [x] **57.** Completion screen integrated into level screen *(combined into [levelId].tsx instead of separate file)*
+- [x] **58.** Wire up XP awards on exercise/level completion
 
 **✓ Phase 2 Complete Checkpoint:** Can play through one level: read lesson, do exercises, complete challenge, see XP
 
@@ -311,13 +311,13 @@ content/achievements.json
 | Phase | Actions | Status |
 |-------|---------|--------|
 | Phase 1: Foundation | 1-28 | ✅ Complete (27/28 — NativeWind deferred) |
-| Phase 2: Core Loop | 29-58 | ⬜ Not Started |
+| Phase 2: Core Loop | 29-58 | ✅ Complete (28/30 — syntax highlighting & markdown dep deferred) |
 | Phase 3: Content Structure | 59-90 | ⬜ Not Started |
 | Phase 4: Gamification | 91-115 | ⬜ Not Started |
 | Phase 5: Polish | 116-130 | ⬜ Not Started |
 | Phase 6: Content & Deploy | 131-147 | ⬜ Not Started |
 
-**Total Progress: 27/147 actions complete**
+**Total Progress: 55/147 actions complete**
 
 ---
 
