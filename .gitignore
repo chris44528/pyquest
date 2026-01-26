@@ -1,0 +1,43 @@
+# Expo
+.expo/
+dist/
+web-build/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# macOS
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.ipa
+*.apk
+*.aab
+android/
+ios/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+*.log
+*.lock
+.cache/
+
+# TypeScript
+*.tsbuildinfo
