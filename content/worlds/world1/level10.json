@@ -86,17 +86,13 @@
       "id": "ex2",
       "type": "fill_blank",
       "difficulty": "easy",
-      "prompt": "Complete the code so it prints \"HELLO from index 0: H\" using the variable, a string method, and string indexing.",
+      "prompt": "Complete the code so it prints \"HELLO from index 0: h\" using the variable, a string method, and string indexing.",
       "starterCode": "word = \"hello\"\nprint(f\"{word._____()} from index 0: {word[___]}\")",
       "solution": "word = \"hello\"\nprint(f\"{word.upper()} from index 0: {word[0]}\")",
       "testCases": [
         {
-          "expectedOutput": "/HELLO from index 0: h/i",
+          "expectedOutput": "HELLO from index 0: h",
           "hidden": false
-        },
-        {
-          "expectedOutput": "/HELLO/",
-          "hidden": true
         }
       ],
       "hints": [
