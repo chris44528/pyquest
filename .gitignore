@@ -36,8 +36,10 @@ coverage/
 
 # Misc
 *.log
-*.lock
 .cache/
 
 # TypeScript
 *.tsbuildinfo
+
+# Context directory
+.context/
