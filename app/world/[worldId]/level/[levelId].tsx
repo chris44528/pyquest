@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -69,7 +69,7 @@ export default function LevelScreen() {
   const exerciseHook = useExercise(exercises);
 
   // Initialize level progress when level loads
-  useMemo(() => {
+  useEffect(() => {
     if (level) {
       initLevelProgress(
         level.id,
@@ -77,15 +77,14 @@ export default function LevelScreen() {
       );
       setChallengeCode(level.challenge.starterCode);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [level?.id]);
+  }, [level?.id, initLevelProgress]);
 
   const handleExerciseComplete = useCallback(
     (exerciseId: string, attempts: number, hintsUsed: number) => {
       completeExercise(levelId ?? '', exerciseId, hintsUsed, attempts);
       exerciseHook.markComplete(exerciseId, attempts, hintsUsed);
     },
-    [completeExercise, levelId, exerciseHook],
+    [completeExercise, levelId, exerciseHook.markComplete],
   );
 
   const handleValidateCode = useCallback(
@@ -234,7 +233,7 @@ export default function LevelScreen() {
                 phase === 'lesson'
                   ? '10%'
                   : phase === 'exercises'
-                    ? `${10 + (exerciseHook.completedCount / exerciseHook.totalExercises) * 70}%`
+                    ? `${10 + ((exerciseHook.totalExercises > 0 ? exerciseHook.completedCount / exerciseHook.totalExercises : 0) * 70)}%`
                     : phase === 'challenge'
                       ? '85%'
                       : '100%',
