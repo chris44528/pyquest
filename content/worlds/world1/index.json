@@ -1,0 +1,23 @@
+{
+  "id": "world1",
+  "name": "Python Basics",
+  "description": "Start your Python journey! Learn print(), variables, strings, operators, and more.",
+  "icon": "\uD83D\uDC0D",
+  "theme": {
+    "primaryColor": "#6c5ce7",
+    "backgroundColor": "#1a1a2e"
+  },
+  "levelOrder": [
+    "level1",
+    "level2",
+    "level3",
+    "level4",
+    "level5",
+    "level6",
+    "level7",
+    "level8",
+    "level9",
+    "level10"
+  ],
+  "bossLevelId": "level10"
+}

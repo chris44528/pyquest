@@ -50,10 +50,12 @@ export default function LevelScreen() {
   const completeExercise = useProgressStore((s) => s.completeExercise);
   const completeLevel = useProgressStore((s) => s.completeLevel);
   const updateStreak = useProgressStore((s) => s.updateStreak);
+  const saveBestTime = useProgressStore((s) => s.saveBestTime);
   const totalXP = useProgressStore((s) => s.totalXP);
 
   const [phase, setPhase] = useState<LevelPhase>('lesson');
   const [xpBefore, setXpBefore] = useState(0);
+  const [exerciseStartTime, setExerciseStartTime] = useState(0);
 
   // Challenge state
   const [challengeEntries, setChallengeEntries] = useState<ConsoleEntry[]>([]);
@@ -102,6 +104,7 @@ export default function LevelScreen() {
 
   const goToExercises = () => {
     setXpBefore(totalXP);
+    setExerciseStartTime(Date.now());
     setPhase('exercises');
   };
 
@@ -182,6 +185,10 @@ export default function LevelScreen() {
     setEarnedStars(stars);
     completeLevel(levelId ?? '', stars);
     updateStreak();
+    if (exerciseStartTime > 0) {
+      const elapsed = Math.round((Date.now() - exerciseStartTime) / 1000);
+      saveBestTime(levelId ?? '', elapsed);
+    }
     setPhase('complete');
   };
 
@@ -426,9 +433,9 @@ export default function LevelScreen() {
 
           <Pressable
             style={styles.primaryButton}
-            onPress={() => router.back()}
+            onPress={() => router.replace(`/world/${worldId}`)}
           >
-            <Text style={styles.primaryButtonText}>Back to Home</Text>
+            <Text style={styles.primaryButtonText}>Back to Levels</Text>
           </Pressable>
         </View>
       )}

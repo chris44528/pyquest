@@ -1,0 +1,233 @@
+{
+  "id": "level4",
+  "worldId": "world1",
+  "order": 4,
+  "title": "String Superpowers",
+  "concept": "String methods",
+  "estimatedMinutes": 15,
+  "content": {
+    "introduction": "Strings aren't just static text. They come with built-in superpowers called methods that let you transform, search, and manipulate text in powerful ways.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "A method is like a built-in action that belongs to a value. You call string methods using dot notation: put a dot after the string or variable, then the method name with parentheses."
+      },
+      {
+        "type": "code",
+        "content": "message = \"hello world\"\nprint(message.upper())\nprint(message.lower())\nprint(message.title())",
+        "metadata": {
+          "output": "HELLO WORLD\nhello world\nHello World",
+          "highlightLines": [2, 3, 4],
+          "annotations": [
+            { "line": 2, "text": ".upper() converts all letters to uppercase" },
+            { "line": 3, "text": ".lower() converts all letters to lowercase" },
+            { "line": 4, "text": ".title() capitalizes the first letter of each word" }
+          ]
+        }
+      },
+      {
+        "type": "text",
+        "content": "The len() function tells you how many characters are in a string, including spaces and punctuation."
+      },
+      {
+        "type": "code",
+        "content": "word = \"Python\"\nprint(len(word))\n\nsentence = \"I love coding!\"\nprint(len(sentence))",
+        "metadata": {
+          "output": "6\n14"
+        }
+      },
+      {
+        "type": "callout",
+        "content": "String methods don't change the original string! They return a new string. If you want to keep the result, save it to a variable.",
+        "metadata": {
+          "variant": "warning"
+        }
+      },
+      {
+        "type": "code",
+        "content": "text = \"  hello  \"\nprint(text.strip())          # Remove whitespace\nprint(text.replace(\"hello\", \"world\"))  # Replace text\nprint(text.count(\" \"))       # Count occurrences",
+        "metadata": {
+          "output": "hello\n  world  \n4"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "text = \"hello\"\nresult = text.upper()\nprint(result)",
+      "output": "HELLO",
+      "highlightLines": [2],
+      "annotations": [
+        { "line": 2, "text": "Call a method with dot notation: variable.method()" }
+      ]
+    },
+    "commonMistakes": [
+      "Forgetting the parentheses: text.upper won't call the method. You need text.upper() with parentheses.",
+      "Thinking methods change the original: msg.upper() returns a new string. The original msg stays the same.",
+      "Confusing len() with .len(): len() is a standalone function, not a method. Use len(text), not text.len().",
+      "Forgetting that strings are case-sensitive: \"Hello\".count(\"h\") returns 0 because 'H' and 'h' are different."
+    ],
+    "realWorldUse": "String methods power everything from search engines to social media. Cleaning user input with .strip(), normalizing text with .lower(), and replacing content are daily tasks for developers."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "word = \"python\"\nprint(word.upper())",
+      "solution": "PYTHON",
+      "testCases": [],
+      "hints": [
+        "The .upper() method converts all letters to uppercase.",
+        "Every lowercase letter becomes its uppercase version."
+      ],
+      "explanation": "The .upper() method returns a new string with all characters converted to uppercase. \"python\" becomes \"PYTHON\".",
+      "options": [
+        "PYTHON",
+        "python",
+        "Python",
+        "Error"
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code to find out how many characters are in the word \"PyQuest\".",
+      "starterCode": "word = \"PyQuest\"\ncount = _____(word)\nprint(count)",
+      "solution": "word = \"PyQuest\"\ncount = len(word)\nprint(count)",
+      "testCases": [
+        {
+          "expectedOutput": "7",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/^7$/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Which function returns the length of a string?",
+        "It's a 3-letter function that stands for 'length'."
+      ],
+      "explanation": "The len() function returns the number of characters in a string. \"PyQuest\" has 7 characters."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code should print the cleaned-up version of the user's name, but it has two bugs. Fix them both.",
+      "starterCode": "name = \"  Alice  \"\ncleaned = name.strip\nprint(cleaned.lower)",
+      "solution": "name = \"  Alice  \"\ncleaned = name.strip()\nprint(cleaned.lower())",
+      "testCases": [
+        {
+          "expectedOutput": "alice",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/^alice$/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Methods need parentheses to be called. Without them, you get the method itself, not its result.",
+        "Both .strip and .lower are missing something important."
+      ],
+      "explanation": "Both method calls were missing parentheses. name.strip returns the method object; name.strip() actually calls it. The same applies to .lower()."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "Given the string \"Hello World\", use .replace() to change \"World\" to \"Python\" and print the result.",
+      "starterCode": "text = \"Hello World\"\n# Replace \"World\" with \"Python\" and print the result\n",
+      "solution": "text = \"Hello World\"\nresult = text.replace(\"World\", \"Python\")\nprint(result)",
+      "testCases": [
+        {
+          "expectedOutput": "Hello Python",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/^Hello Python$/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "The .replace() method takes two arguments: the old text and the new text.",
+        "The syntax is: string.replace(\"old\", \"new\")"
+      ],
+      "explanation": "The .replace() method searches for the first argument and swaps it with the second. text.replace(\"World\", \"Python\") creates a new string with the substitution."
+    },
+    {
+      "id": "ex5",
+      "type": "write_code",
+      "difficulty": "hard",
+      "prompt": "Write code that takes the string \"  PyQuest Is AWESOME  \", strips the whitespace, converts it to lowercase, replaces \"awesome\" with \"fantastic\", and prints the result along with its length.",
+      "starterCode": "text = \"  PyQuest Is AWESOME  \"\n# 1. Strip whitespace\n# 2. Convert to lowercase\n# 3. Replace \"awesome\" with \"fantastic\"\n# 4. Print the result and its length\n",
+      "solution": "text = \"  PyQuest Is AWESOME  \"\nresult = text.strip().lower().replace(\"awesome\", \"fantastic\")\nprint(result)\nprint(len(result))",
+      "testCases": [
+        {
+          "expectedOutput": "/pyquest is fantastic/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/22/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/pyquest is fantastic[\\s\\S]*22/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "You can chain methods together: text.strip().lower().replace(...).",
+        "Make sure to convert to lowercase BEFORE replacing, since the original has \"AWESOME\" in uppercase.",
+        "Use len() to find the length of the final result."
+      ],
+      "explanation": "Method chaining lets you apply multiple transformations in sequence. The order matters: strip first to remove spaces, then lower to normalize case, then replace to swap the word."
+    }
+  ],
+  "challenge": {
+    "id": "challenge4",
+    "title": "Text Transformer",
+    "description": "Build a text transformation pipeline! Take the messy input string and clean it up using multiple string methods. Your output should demonstrate at least 3 different string methods.",
+    "requirements": [
+      "Start with the provided messy string",
+      "Use at least 3 different string methods",
+      "Print the cleaned result",
+      "Print the length of the cleaned result"
+    ],
+    "starterCode": "messy = \"   hELLo, wORLd! welcome TO pyTHON!   \"\n# Transform this messy text into clean text\n# Use at least 3 string methods\n# Print the result and its length\n",
+    "testCases": [
+      {
+        "expectedOutput": "/(hello|Hello|HELLO)/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/\\d+/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(python|Python|PYTHON)/i",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Use method chaining to apply all transformations in a single line",
+        "testCase": {
+          "expectedOutput": "/(hello|welcome|python)/i",
+          "hidden": false
+        },
+        "bonusXP": 10
+      },
+      {
+        "description": "Use .count() to show how many times a specific letter appears in the cleaned text",
+        "testCase": {
+          "expectedOutput": "/\\d+/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}

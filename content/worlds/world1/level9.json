@@ -1,0 +1,242 @@
+{
+  "id": "level9",
+  "worldId": "world1",
+  "order": 9,
+  "title": "Slice & Dice",
+  "concept": "String slicing and indexing",
+  "estimatedMinutes": 10,
+  "content": {
+    "introduction": "Strings aren't just blocks of text — they're sequences of characters you can pick apart, rearrange, and slice up. In this lesson, you'll learn to extract exactly the characters you want using Python's powerful slicing syntax.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "Every character in a string has a position number called an index. Python starts counting from 0, not 1. You access characters using square brackets []."
+      },
+      {
+        "type": "code",
+        "content": "word = \"PYTHON\"\nprint(word[0])  # First character\nprint(word[1])  # Second character\nprint(word[5])  # Last character (6 letters, index 0-5)",
+        "metadata": {
+          "output": "P\nY\nN"
+        }
+      },
+      {
+        "type": "text",
+        "content": "Negative indices count from the end. -1 is the last character, -2 is second to last, and so on."
+      },
+      {
+        "type": "code",
+        "content": "word = \"PYTHON\"\nprint(word[-1])  # Last character\nprint(word[-2])  # Second to last\nprint(word[-6])  # Same as word[0]",
+        "metadata": {
+          "output": "N\nO\nP"
+        }
+      },
+      {
+        "type": "callout",
+        "content": "Slicing uses the pattern [start:end]. The start index is included, but the end index is NOT included. Think of it as \"from start UP TO (but not including) end.\"",
+        "metadata": {
+          "variant": "tip"
+        }
+      },
+      {
+        "type": "code",
+        "content": "word = \"PYTHON\"\nprint(word[0:3])  # Characters 0, 1, 2\nprint(word[2:6])  # Characters 2, 3, 4, 5\nprint(word[:4])   # From start to index 4\nprint(word[3:])   # From index 3 to end",
+        "metadata": {
+          "output": "PYT\nTHON\nPYTH\nHON"
+        }
+      },
+      {
+        "type": "text",
+        "content": "You can add a third number for the step: [start:end:step]. A step of 2 grabs every other character. A step of -1 reverses the string!"
+      },
+      {
+        "type": "code",
+        "content": "word = \"PYTHON\"\nprint(word[0:6:2])  # Every other character\nprint(word[::2])    # Same thing, shorthand\nprint(word[::-1])   # Reverse the string!",
+        "metadata": {
+          "output": "PTO\nPTO\nNOHTYP"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "text = \"Hello, World!\"\nprint(text[0:5])    # \"Hello\"\nprint(text[7:12])   # \"World\"\nprint(text[::-1])   # \"!dlroW ,olleH\"",
+      "output": "Hello\nWorld\n!dlroW ,olleH",
+      "highlightLines": [2, 3, 4],
+      "annotations": [
+        { "line": 2, "text": "[0:5] gets characters at indices 0,1,2,3,4" },
+        { "line": 3, "text": "[7:12] gets characters at indices 7,8,9,10,11" },
+        { "line": 4, "text": "[::-1] reverses the entire string" }
+      ]
+    },
+    "commonMistakes": [
+      "Off-by-one errors: word[0:3] gives 3 characters (indices 0,1,2), NOT 4. The end index is excluded.",
+      "Index out of range: If a string has 5 characters, word[5] is an error (valid indices are 0-4). But slicing beyond the end is safe: word[0:100] just gives the whole string.",
+      "Forgetting zero-based indexing: The first character is word[0], not word[1]. This is the most common beginner mistake."
+    ],
+    "realWorldUse": "String slicing is used everywhere — extracting file extensions, parsing dates and phone numbers, processing usernames, and manipulating URLs. It's one of the most-used Python features in data processing and web development."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "secret = \"ABCDEF\"\nprint(secret[0])\nprint(secret[-1])",
+      "solution": "A\nF",
+      "testCases": [],
+      "hints": [
+        "Index [0] gives the first character of the string.",
+        "Index [-1] gives the last character of the string."
+      ],
+      "explanation": "secret[0] is 'A' (first character). secret[-1] is 'F' (last character, since negative indices count from the end).",
+      "options": [
+        "A\nF",
+        "A\nE",
+        "B\nF",
+        "A\nDEF"
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code to extract \"World\" from the string and print it.",
+      "starterCode": "greeting = \"Hello, World!\"\nword = greeting[___]\nprint(word)",
+      "solution": "greeting = \"Hello, World!\"\nword = greeting[7:12]\nprint(word)",
+      "testCases": [
+        {
+          "expectedOutput": "World",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/^World$/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Count the characters: H(0) e(1) l(2) l(3) o(4) ,(5) (6) W(7) o(8) r(9) l(10) d(11) !(12).",
+        "The slice [7:12] starts at W (index 7) and goes up to but not including ! (index 12)."
+      ],
+      "explanation": "\"World\" starts at index 7 (W) and ends at index 11 (d). Since slicing excludes the end index, we use [7:12]."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code should print the first 3 characters of the word, but it prints 4 instead. Fix the slice!",
+      "starterCode": "word = \"Python\"\nfirst_three = word[0:4]\nprint(first_three)",
+      "solution": "word = \"Python\"\nfirst_three = word[0:3]\nprint(first_three)",
+      "testCases": [
+        {
+          "expectedOutput": "Pyt",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/^Pyt$/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Remember: the end index in a slice is NOT included.",
+        "To get 3 characters starting from index 0, you need [0:3] — that gives indices 0, 1, and 2."
+      ],
+      "explanation": "word[0:4] gives characters at indices 0,1,2,3 which is 'Pyth' (4 characters). To get only the first 3, use word[0:3] which gives indices 0,1,2 = 'Pyt'."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "Given the string \"Programmers\", write code that prints:\n1. The first 4 characters\n2. The last 4 characters\n3. The string reversed\nEach on a separate line.",
+      "starterCode": "text = \"Programmers\"\n# Print first 4 characters\n\n# Print last 4 characters\n\n# Print the reversed string\n",
+      "solution": "text = \"Programmers\"\nprint(text[:4])\nprint(text[-4:])\nprint(text[::-1])",
+      "testCases": [
+        {
+          "expectedOutput": "/Prog/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/mers/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/sremmargorP/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Use [:4] for the first 4 characters and [-4:] for the last 4 characters.",
+        "To reverse a string, use the slice [::-1] — the -1 step goes backwards through the string."
+      ],
+      "explanation": "text[:4] gives 'Prog' (first 4). text[-4:] gives 'mers' (last 4). text[::-1] reverses the string to 'sremmargorP'."
+    },
+    {
+      "id": "ex5",
+      "type": "write_code",
+      "difficulty": "hard",
+      "prompt": "Given the string \"abcdefghij\", use slicing to print:\n1. Every other character (a, c, e, g, i)\n2. Every third character starting from index 1 (b, e, h)\n3. The string reversed, taking every 2nd character (j, h, f, d, b)\nPrint each result on its own line.",
+      "starterCode": "letters = \"abcdefghij\"\n# Every other character\n\n# Every third character starting from index 1\n\n# Reversed, every 2nd character\n",
+      "solution": "letters = \"abcdefghij\"\nprint(letters[::2])\nprint(letters[1::3])\nprint(letters[::-2])",
+      "testCases": [
+        {
+          "expectedOutput": "/acegi/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/beh/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/jhfdb/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "For every other character from the start, use [::2]. For every 3rd starting at index 1, use [1::3].",
+        "To go backwards every 2 characters, combine a negative step: [::-2] starts from the end and skips one each time."
+      ],
+      "explanation": "letters[::2] starts at 0, steps by 2: a,c,e,g,i. letters[1::3] starts at 1, steps by 3: b,e,h. letters[::-2] starts from end, steps back by 2: j,h,f,d,b."
+    }
+  ],
+  "challenge": {
+    "id": "challenge9",
+    "title": "Secret Decoder",
+    "description": "You've intercepted a coded message! Use string slicing to decode it. Extract hidden words from the encoded strings and assemble the secret message.",
+    "requirements": [
+      "Use string indexing to extract at least 2 individual characters",
+      "Use string slicing with [start:end] to extract at least 2 substrings",
+      "Reverse at least one string using [::-1]",
+      "Print the decoded message (at least 3 lines of output)"
+    ],
+    "starterCode": "# Secret Decoder\n# Use slicing to decode the hidden message!\n\ncoded1 = \"HxexlxlxoxWorldx\"\n# Hint: try every other character with [::2]\n\ncoded2 = \"!nohtyP\"\n# Hint: this one is backwards!\n\ncoded3 = \"xxLEARNxxCODExx\"\n# Hint: extract the real words using slices\n\n# Decode and print the secret message!\n",
+    "testCases": [
+      {
+        "expectedOutput": "/.+\\n.+\\n.+/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(Hello|Python|LEARN|CODE)/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/::-1/",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Use step slicing (e.g., [::2]) to decode at least one message",
+        "testCase": {
+          "expectedOutput": "/Hello/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      },
+      {
+        "description": "Combine decoded parts into a single sentence using string concatenation or f-strings",
+        "testCase": {
+          "expectedOutput": "/.{15,}/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}

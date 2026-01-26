@@ -13,11 +13,12 @@ import { XP_REWARDS } from '@/types/progression';
 
 interface ProgressActions {
   updateXP: (amount: number) => void;
-  completeExercise: (levelId: string, exerciseId: string, hintsUsed: number, attempts: number) => void;
+  completeExercise: (levelId: string, exerciseId: string, hintsUsed: number, attempts: number, lastSubmission?: string) => void;
   completeLevel: (levelId: string, stars: StarRating) => void;
   updateStreak: () => void;
   unlockAchievement: (achievement: Achievement) => void;
   initLevelProgress: (levelId: string, exerciseIds: string[]) => void;
+  saveBestTime: (levelId: string, timeSeconds: number) => void;
   resetProgress: () => void;
 }
 
@@ -82,7 +83,8 @@ export const useProgressStore = create<ProgressStore>()(
         levelId: string,
         exerciseId: string,
         hintsUsed: number,
-        attempts: number
+        attempts: number,
+        lastSubmission?: string
       ) =>
         set((state) => {
           const levelProg = state.levelProgress[levelId];
@@ -91,7 +93,7 @@ export const useProgressStore = create<ProgressStore>()(
           const updatedExercises = levelProg.exerciseProgress.map(
             (ep: ExerciseProgress) =>
               ep.exerciseId === exerciseId
-                ? { ...ep, completed: true, attempts, hintsUsed }
+                ? { ...ep, completed: true, attempts, hintsUsed, lastSubmission }
                 : ep
           );
 
@@ -174,6 +176,25 @@ export const useProgressStore = create<ProgressStore>()(
             levelProgress: {
               ...state.levelProgress,
               [levelId]: newLevelProgress,
+            },
+          };
+        }),
+
+      saveBestTime: (levelId: string, timeSeconds: number) =>
+        set((state) => {
+          const levelProg = state.levelProgress[levelId];
+          if (!levelProg) return state;
+
+          const currentBest = levelProg.bestTime;
+          if (currentBest !== undefined && currentBest <= timeSeconds) return state;
+
+          return {
+            levelProgress: {
+              ...state.levelProgress,
+              [levelId]: {
+                ...levelProg,
+                bestTime: timeSeconds,
+              },
             },
           };
         }),

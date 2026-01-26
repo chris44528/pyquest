@@ -1,0 +1,242 @@
+{
+  "id": "level7",
+  "worldId": "world1",
+  "order": 7,
+  "title": "F-strings",
+  "concept": "F-strings and formatting",
+  "estimatedMinutes": 10,
+  "content": {
+    "introduction": "Imagine you want to say \"Hello, Alice! You scored 95 points.\" Building that with commas or + is clunky. F-strings let you drop variables and expressions right into your text — it's the modern Python way to format strings.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "An f-string starts with the letter f before the opening quote. Inside the string, you can place any Python expression inside curly braces {} and it will be evaluated and inserted."
+      },
+      {
+        "type": "code",
+        "content": "name = \"Alice\"\nscore = 95\nprint(f\"Hello, {name}! You scored {score} points.\")",
+        "metadata": {
+          "output": "Hello, Alice! You scored 95 points."
+        }
+      },
+      {
+        "type": "callout",
+        "content": "The f (or F) before the quote is what makes it an f-string. Without it, {name} would print literally as the text \"{name}\" instead of the variable's value.",
+        "metadata": {
+          "variant": "tip"
+        }
+      },
+      {
+        "type": "text",
+        "content": "You can put any expression inside the curly braces — not just variables. Math, function calls, and even comparisons all work."
+      },
+      {
+        "type": "code",
+        "content": "price = 19.99\nquantity = 3\nprint(f\"Total: ${price * quantity}\")\nprint(f\"Is expensive? {price > 50}\")",
+        "metadata": {
+          "output": "Total: $59.97\nIs expensive? False"
+        }
+      },
+      {
+        "type": "text",
+        "content": "F-strings also support format specifiers after a colon. These let you control decimal places, alignment, and padding."
+      },
+      {
+        "type": "code",
+        "content": "pi = 3.14159265\nprint(f\"Pi is approximately {pi:.2f}\")\nprint(f\"{'Left':<10}|{'Right':>10}\")\nprint(f\"{'Center':^20}\")",
+        "metadata": {
+          "output": "Pi is approximately 3.14\nLeft      |     Right\n       Center       "
+        }
+      },
+      {
+        "type": "callout",
+        "content": "Format specifiers go after a colon inside the braces: {value:.2f} for 2 decimal places, {value:>10} for right-aligned in 10 characters, {value:^20} for centered in 20 characters.",
+        "metadata": {
+          "variant": "tip"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "name = \"World\"\ncount = 42\nprint(f\"Hello, {name}! The answer is {count}.\")",
+      "output": "Hello, World! The answer is 42.",
+      "highlightLines": [3],
+      "annotations": [
+        { "line": 3, "text": "f before the quote enables {expression} substitution" }
+      ]
+    },
+    "commonMistakes": [
+      "Forgetting the f prefix: print(\"{name}\") prints the literal text {name} instead of the variable's value. Always add f before the quote.",
+      "Using curly braces without an expression: f\"{}\" causes a SyntaxError. You must put something inside the braces.",
+      "Confusing format specifiers: :.2f formats a float to 2 decimal places, but using it on a string like f\"{'hello':.2f}\" causes a ValueError."
+    ],
+    "realWorldUse": "F-strings are the preferred way to format strings in modern Python. They're used in logging, user interfaces, reports, file generation, email templates, and anywhere you need to build text dynamically. They're faster and more readable than older methods like .format() or % formatting."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "animal = \"cat\"\ncount = 3\nprint(f\"I have {count} {animal}s.\")",
+      "solution": "I have 3 cats.",
+      "testCases": [],
+      "hints": [
+        "The f before the quote means expressions in {} get replaced with their values.",
+        "{count} becomes 3 and {animal} becomes cat."
+      ],
+      "explanation": "In the f-string, {count} is replaced by the value 3 and {animal} is replaced by \"cat\". The s after the closing brace is just a regular character, so it prints \"cats\" with the s appended.",
+      "options": [
+        "I have 3 cats.",
+        "I have {count} {animal}s.",
+        "I have count cats.",
+        "I have 3cats."
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code to print \"The sum of 7 and 3 is 10\" using an f-string with an expression inside the braces.",
+      "starterCode": "a = 7\nb = 3\nprint(f\"The sum of {a} and {b} is {___}\")",
+      "solution": "a = 7\nb = 3\nprint(f\"The sum of {a} and {b} is {a + b}\")",
+      "testCases": [
+        {
+          "expectedOutput": "The sum of 7 and 3 is 10",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/sum.*7.*3.*10/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "You can put any Python expression inside the curly braces of an f-string.",
+        "What math expression adds a and b together?"
+      ],
+      "explanation": "F-strings evaluate expressions inside {}. Writing {a + b} calculates 7 + 3 and inserts the result (10) into the string."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code is supposed to use an f-string to print \"Hello, Alice!\" but it prints the wrong thing. Fix it.",
+      "starterCode": "name = \"Alice\"\nprint(\"Hello, {name}!\")",
+      "solution": "name = \"Alice\"\nprint(f\"Hello, {name}!\")",
+      "testCases": [
+        {
+          "expectedOutput": "Hello, Alice!",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/Hello, Alice!/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "What makes a regular string into an f-string?",
+        "You need to add the letter f before the opening quote."
+      ],
+      "explanation": "Without the f prefix, the string treats {name} as literal text. Adding f before the opening quote activates f-string formatting, which evaluates {name} and replaces it with \"Alice\"."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "Create variables for a product name (\"Widget\") and its price (29.5). Use an f-string to print the price formatted to exactly 2 decimal places, like: \"Widget costs $29.50\"",
+      "starterCode": "# Create the variables\n\n# Print with f-string and format specifier\n",
+      "solution": "product = \"Widget\"\nprice = 29.5\nprint(f\"{product} costs ${price:.2f}\")",
+      "testCases": [
+        {
+          "expectedOutput": "/Widget costs \\$29\\.50/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/29\\.50/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Use :.2f inside the curly braces after the variable name to format a number to 2 decimal places.",
+        "The format specifier goes after a colon: {price:.2f}"
+      ],
+      "explanation": "The :.2f format specifier tells Python to display the number as a float with exactly 2 decimal places. So 29.5 becomes 29.50. The $ is just a literal character in the string."
+    },
+    {
+      "id": "ex5",
+      "type": "write_code",
+      "difficulty": "hard",
+      "prompt": "Use f-strings with alignment to print a simple two-column table. Print these three lines:\n- \"Name\" left-aligned in 15 characters, then \"Score\" right-aligned in 10 characters\n- \"Alice\" left-aligned in 15 characters, then \"95\" right-aligned in 10 characters\n- \"Bob\" left-aligned in 15 characters, then \"87\" right-aligned in 10 characters",
+      "starterCode": "# Print header row\n\n# Print Alice's row\n\n# Print Bob's row\n",
+      "solution": "print(f\"{'Name':<15}{'Score':>10}\")\nprint(f\"{'Alice':<15}{'95':>10}\")\nprint(f\"{'Bob':<15}{'87':>10}\")",
+      "testCases": [
+        {
+          "expectedOutput": "/Name\\s+Score/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/Alice\\s+95/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/Bob\\s+87/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Use :<15 to left-align a value in 15 characters of space.",
+        "Use :>10 to right-align a value in 10 characters of space.",
+        "Example: f\"{'text':<15}\" left-aligns 'text' padded to 15 characters."
+      ],
+      "explanation": "The < character means left-align and > means right-align. The number after it specifies the total width. So {'Name':<15} puts \"Name\" at the left of a 15-character-wide space, and {'Score':>10} puts \"Score\" at the right of a 10-character-wide space."
+    }
+  ],
+  "challenge": {
+    "id": "challenge7",
+    "title": "Report Card",
+    "description": "Generate a formatted student report card using f-strings! Create a clean, aligned display of a student's grades.",
+    "requirements": [
+      "Store a student name, and at least 3 subject names with their scores (as numbers)",
+      "Print a title line like \"Report Card for [name]\"",
+      "Print a divider line (at least 25 characters)",
+      "Print each subject and score on its own line, with the subject left-aligned and the score right-aligned using f-string formatting",
+      "Calculate and print the average score formatted to 1 decimal place using :.1f"
+    ],
+    "starterCode": "# Student info\nstudent = \"Alice\"\nmath_score = 92\nscience_score = 88\nenglish_score = 95\n\n# Print title\n\n# Print divider\n\n# Print each subject with aligned formatting\n\n# Calculate and print average\n",
+    "testCases": [
+      {
+        "expectedOutput": "/Report Card.*Alice/i",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(-{25,}|={25,})/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(Math|math|MATH).*92/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/(Average|average|AVERAGE|Mean|mean).*91\\.7/",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Add a letter grade next to each score (A for 90+, B for 80+, C for 70+)",
+        "testCase": {
+          "expectedOutput": "/[ABC].*[ABC].*[ABC]/s",
+          "hidden": false
+        },
+        "bonusXP": 10
+      },
+      {
+        "description": "Use f-string alignment (:< and :>) to create a neatly formatted table where subjects and scores are visually aligned",
+        "testCase": {
+          "expectedOutput": "/(\\s{2,}\\d|\\d\\s{2,})/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}

@@ -1,4 +1,5 @@
 export type {
+  WorldMeta,
   World,
   Level,
   LessonContent,

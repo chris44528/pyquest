@@ -1,0 +1,235 @@
+{
+  "id": "level5",
+  "worldId": "world1",
+  "order": 5,
+  "title": "Basic Operators",
+  "concept": "Arithmetic operators",
+  "estimatedMinutes": 10,
+  "content": {
+    "introduction": "Math is everywhere in programming. Whether you're calculating a game score, splitting a bill, or figuring out how many days until your birthday, Python's arithmetic operators have you covered.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "Python can do all the math you'd expect — addition, subtraction, multiplication, and division — plus a few tricks you might not know about."
+      },
+      {
+        "type": "code",
+        "content": "print(10 + 3)\nprint(10 - 3)\nprint(10 * 3)\nprint(10 / 3)",
+        "metadata": {
+          "output": "13\n7\n30\n3.3333333333333335"
+        }
+      },
+      {
+        "type": "callout",
+        "content": "Notice that / always gives you a decimal (float) result, even if the numbers divide evenly. 10 / 2 gives 5.0, not 5.",
+        "metadata": {
+          "variant": "tip"
+        }
+      },
+      {
+        "type": "text",
+        "content": "Python also has three special operators that are incredibly useful: floor division (//), modulo (%), and exponent (**)."
+      },
+      {
+        "type": "code",
+        "content": "print(10 // 3)  # Floor division: rounds down\nprint(10 % 3)   # Modulo: remainder\nprint(2 ** 5)    # Exponent: 2 to the power of 5",
+        "metadata": {
+          "output": "3\n1\n32"
+        }
+      },
+      {
+        "type": "text",
+        "content": "Floor division (//) drops the decimal part and rounds down. Modulo (%) gives you the remainder after division — it's great for checking if a number is even or odd. The exponent operator (**) raises a number to a power."
+      },
+      {
+        "type": "callout",
+        "content": "Python follows standard math order of operations (PEMDAS). Use parentheses to control the order: (2 + 3) * 4 gives 20, but 2 + 3 * 4 gives 14.",
+        "metadata": {
+          "variant": "tip"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "result = (10 + 5) * 2\nprint(result)",
+      "output": "30",
+      "highlightLines": [1],
+      "annotations": [
+        { "line": 1, "text": "Parentheses control the order of operations" }
+      ]
+    },
+    "commonMistakes": [
+      "Using / when you want integer division. Use // for whole number results: 7 / 2 gives 3.5, but 7 // 2 gives 3.",
+      "Confusing ** (exponent) with * (multiply). 3 ** 2 is 9 (three squared), while 3 * 2 is 6 (three times two).",
+      "Forgetting order of operations. 2 + 3 * 4 is 14, not 20. Use parentheses: (2 + 3) * 4."
+    ],
+    "realWorldUse": "Arithmetic operators power everything from financial calculations and game physics to data analysis and machine learning. Modulo is especially useful for things like determining even/odd numbers, cycling through lists, or formatting time displays."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "print(15 % 4)",
+      "solution": "3",
+      "testCases": [],
+      "hints": [
+        "The % operator gives the remainder after division.",
+        "15 divided by 4 is 3 with a remainder of 3."
+      ],
+      "explanation": "The modulo operator (%) returns the remainder of 15 / 4. Since 4 goes into 15 three times (4 * 3 = 12) with 3 left over, the result is 3.",
+      "options": [
+        "3.75",
+        "3",
+        "4",
+        "1"
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "fill_blank",
+      "difficulty": "easy",
+      "prompt": "Complete the code to calculate 2 raised to the power of 10 and print the result.",
+      "starterCode": "result = 2 ___ 10\nprint(result)",
+      "solution": "result = 2 ** 10\nprint(result)",
+      "testCases": [
+        {
+          "expectedOutput": "1024",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/1024/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Which operator raises a number to a power?",
+        "The exponent operator uses two asterisks: **"
+      ],
+      "explanation": "The ** operator is Python's exponent operator. 2 ** 10 means 2 raised to the power of 10, which equals 1024."
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code should calculate the average of three scores (85, 92, 78) but it gives the wrong answer. Fix the order of operations.",
+      "starterCode": "average = 85 + 92 + 78 / 3\nprint(average)",
+      "solution": "average = (85 + 92 + 78) / 3\nprint(average)",
+      "testCases": [
+        {
+          "expectedOutput": "85.0",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/85/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Without parentheses, Python follows order of operations (PEMDAS).",
+        "Division happens before addition. Wrap the sum in parentheses so it's calculated first."
+      ],
+      "explanation": "Without parentheses, Python divides 78 by 3 first (getting 26.0), then adds 85 + 92 + 26.0 = 203.0. Adding parentheses around the sum ensures all three scores are added before dividing by 3."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "A movie is 137 minutes long. Write code that prints the number of full hours and the remaining minutes on separate lines. Use floor division and modulo.",
+      "starterCode": "minutes = 137\n# Print the number of full hours\n# Print the remaining minutes\n",
+      "solution": "minutes = 137\nprint(minutes // 60)\nprint(minutes % 60)",
+      "testCases": [
+        {
+          "expectedOutput": "/2\\s*\\n17/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/2/",
+          "hidden": true
+        },
+        {
+          "expectedOutput": "/17/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Floor division (//) by 60 gives the number of full hours.",
+        "Modulo (%) by 60 gives the leftover minutes after removing full hours."
+      ],
+      "explanation": "137 // 60 gives 2 (two full hours), and 137 % 60 gives 17 (the remaining minutes after removing those 2 hours). Floor division and modulo are a powerful pair for breaking values into groups."
+    },
+    {
+      "id": "ex5",
+      "type": "multiple_choice",
+      "difficulty": "hard",
+      "prompt": "What is the value of this expression?\n\n2 ** 3 + 10 // 3 - 1",
+      "solution": "10",
+      "testCases": [],
+      "hints": [
+        "Python follows order of operations: exponents first, then floor division, then addition and subtraction left to right.",
+        "Step by step: 2**3 = 8, then 10//3 = 3, then 8 + 3 - 1 = 10."
+      ],
+      "explanation": "Following order of operations: exponent first (2**3 = 8), then floor division (10//3 = 3), then left to right: 8 + 3 - 1 = 10.",
+      "options": [
+        "10",
+        "12",
+        "8",
+        "6"
+      ]
+    }
+  ],
+  "challenge": {
+    "id": "challenge5",
+    "title": "Calculator",
+    "description": "Build a mini calculator! Given two numbers, perform several calculations and print the results. Show off your knowledge of all Python's arithmetic operators.",
+    "requirements": [
+      "Store the values 47 and 8 in variables named a and b",
+      "Print the result of a + b",
+      "Print the result of a - b",
+      "Print the result of a * b",
+      "Print the result of a // b (floor division)",
+      "Print the result of a % b (remainder)"
+    ],
+    "starterCode": "# Store the two numbers\n\n# Print addition\n\n# Print subtraction\n\n# Print multiplication\n\n# Print floor division\n\n# Print remainder\n",
+    "testCases": [
+      {
+        "expectedOutput": "/55/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/39/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/376/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/5\\b/",
+        "hidden": true
+      },
+      {
+        "expectedOutput": "/7\\b/",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Also print a ** b (47 to the power of 8)",
+        "testCase": {
+          "expectedOutput": "/314025867401/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      },
+      {
+        "description": "Print the result of regular division (a / b) showing the decimal",
+        "testCase": {
+          "expectedOutput": "/5\\.875/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}

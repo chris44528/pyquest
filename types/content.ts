@@ -1,3 +1,16 @@
+export interface WorldMeta {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  theme: {
+    primaryColor: string;
+    backgroundColor: string;
+  };
+  levelOrder: string[];
+  bossLevelId: string;
+}
+
 export interface World {
   id: string;
   name: string;

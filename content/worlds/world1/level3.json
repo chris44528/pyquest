@@ -1,0 +1,238 @@
+{
+  "id": "level3",
+  "worldId": "world1",
+  "order": 3,
+  "title": "Know Your Types",
+  "concept": "Data types: int, float, str, bool",
+  "estimatedMinutes": 12,
+  "content": {
+    "introduction": "Not all data is created equal. A number, a word, and a yes/no answer are very different things. Python keeps track of what kind of data you're working with using types.",
+    "explanation": [
+      {
+        "type": "text",
+        "content": "Python has four basic data types you'll use constantly. Integers (int) are whole numbers. Floats (float) are decimal numbers. Strings (str) are text. Booleans (bool) are True or False values."
+      },
+      {
+        "type": "code",
+        "content": "age = 25          # int (integer)\nprice = 9.99      # float (decimal)\nname = \"Python\"   # str (string)\nis_fun = True     # bool (boolean)\n\nprint(age)\nprint(price)\nprint(name)\nprint(is_fun)",
+        "metadata": {
+          "output": "25\n9.99\nPython\nTrue",
+          "highlightLines": [1, 2, 3, 4],
+          "annotations": [
+            { "line": 1, "text": "Whole numbers are integers (int)" },
+            { "line": 2, "text": "Decimal numbers are floats (float)" },
+            { "line": 3, "text": "Text in quotes is a string (str)" },
+            { "line": 4, "text": "True or False values are booleans (bool)" }
+          ]
+        }
+      },
+      {
+        "type": "text",
+        "content": "You can check the type of any value using the type() function. This is very handy when debugging!"
+      },
+      {
+        "type": "code",
+        "content": "print(type(42))\nprint(type(3.14))\nprint(type(\"hello\"))\nprint(type(True))",
+        "metadata": {
+          "output": "<class 'int'>\n<class 'float'>\n<class 'str'>\n<class 'bool'>"
+        }
+      },
+      {
+        "type": "callout",
+        "content": "Be careful: \"42\" (with quotes) is a string, not an integer! The quotes make all the difference. type(\"42\") is str, but type(42) is int.",
+        "metadata": {
+          "variant": "warning"
+        }
+      },
+      {
+        "type": "code",
+        "content": "# Types affect how operators work\nprint(5 + 3)       # int + int = int\nprint(5 + 3.0)     # int + float = float\nprint(\"5\" + \"3\")   # str + str = concatenation",
+        "metadata": {
+          "output": "8\n8.0\n53"
+        }
+      }
+    ],
+    "syntaxExample": {
+      "code": "x = 42\nprint(type(x))",
+      "output": "<class 'int'>",
+      "highlightLines": [2],
+      "annotations": [
+        { "line": 2, "text": "type() reveals what kind of data a variable holds" }
+      ]
+    },
+    "commonMistakes": [
+      "Confusing \"42\" (string) with 42 (integer): Adding quotes around a number makes it text.",
+      "Mixing types without converting: \"Age: \" + 25 causes an error. Use str(25) to convert first.",
+      "Forgetting that True and False are capitalized: true and false (lowercase) are not valid booleans.",
+      "Assuming 5 / 2 gives an integer: In Python 3, regular division always returns a float (2.5)."
+    ],
+    "realWorldUse": "Data types are everywhere: ages are integers, prices are floats, names are strings, and login states are booleans. Understanding types prevents bugs and makes your code reliable."
+  },
+  "exercises": [
+    {
+      "id": "ex1",
+      "type": "predict_output",
+      "difficulty": "easy",
+      "prompt": "What will this code print?",
+      "starterCode": "x = 10\nprint(type(x))",
+      "solution": "<class 'int'>",
+      "testCases": [],
+      "hints": [
+        "The value 10 is a whole number with no decimal point.",
+        "type() tells you the data type. Whole numbers are integers."
+      ],
+      "explanation": "The value 10 is a whole number, so Python classifies it as an int (integer). type() displays this as <class 'int'>.",
+      "options": [
+        "<class 'int'>",
+        "<class 'float'>",
+        "<class 'str'>",
+        "int"
+      ]
+    },
+    {
+      "id": "ex2",
+      "type": "multiple_choice",
+      "difficulty": "easy",
+      "prompt": "What is the type of the value \"100\"?",
+      "solution": "str (string)",
+      "testCases": [],
+      "hints": [
+        "Look closely at the quotation marks around the value.",
+        "Anything inside quotation marks is treated as text, regardless of what it looks like."
+      ],
+      "explanation": "Even though \"100\" looks like a number, the quotation marks make it a string (str). Without quotes, 100 would be an integer.",
+      "options": [
+        "int (integer)",
+        "float (decimal)",
+        "str (string)",
+        "bool (boolean)"
+      ]
+    },
+    {
+      "id": "ex3",
+      "type": "fix_bug",
+      "difficulty": "medium",
+      "prompt": "This code tries to show a message with a number, but it crashes. Fix it so it prints correctly.",
+      "starterCode": "score = 95\nprint(\"Your score is: \" + score)",
+      "solution": "score = 95\nprint(\"Your score is: \" + str(score))",
+      "testCases": [
+        {
+          "expectedOutput": "/Your score is: 95/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/95/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "You cannot add a string and an integer together directly.",
+        "Use str() to convert the number to a string before joining them with +."
+      ],
+      "explanation": "Python cannot concatenate a string and an integer. You need to convert the integer to a string first using str(score)."
+    },
+    {
+      "id": "ex4",
+      "type": "write_code",
+      "difficulty": "medium",
+      "prompt": "Create three variables: an integer called 'count' set to 7, a float called 'temperature' set to 36.6, and a boolean called 'is_sunny' set to True. Print the type of each one.",
+      "starterCode": "# Create three variables with different types\n# Print the type of each\n",
+      "solution": "count = 7\ntemperature = 36.6\nis_sunny = True\nprint(type(count))\nprint(type(temperature))\nprint(type(is_sunny))",
+      "testCases": [
+        {
+          "expectedOutput": "/<class 'int'>/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/<class 'float'>/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/<class 'bool'>/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Remember: integers have no decimal, floats have a decimal point, booleans are True or False.",
+        "Use type() around each variable inside a print() call.",
+        "Boolean values must be capitalized: True, not true."
+      ],
+      "explanation": "Each variable holds a different type: 7 is an int, 36.6 is a float, and True is a bool. The type() function reveals the type of each value."
+    },
+    {
+      "id": "ex5",
+      "type": "write_code",
+      "difficulty": "hard",
+      "prompt": "Write code that demonstrates type conversion. Start with the string \"42\", convert it to an integer, add 8 to it, then convert the result to a float. Print the final value and its type.",
+      "starterCode": "# Start with the string \"42\"\n# Convert to int, add 8, convert to float\n# Print the result and its type\n",
+      "solution": "text = \"42\"\nnumber = int(text)\nresult = number + 8\nfinal = float(result)\nprint(final)\nprint(type(final))",
+      "testCases": [
+        {
+          "expectedOutput": "/50\\.0/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/<class 'float'>/",
+          "hidden": false
+        },
+        {
+          "expectedOutput": "/50\\.0[\\s\\S]*<class 'float'>/",
+          "hidden": true
+        }
+      ],
+      "hints": [
+        "Use int() to convert a string to an integer.",
+        "Use float() to convert a number to a decimal.",
+        "The chain is: str -> int() -> add 8 -> float() -> print."
+      ],
+      "explanation": "Type conversion lets you change data from one type to another. int(\"42\") gives 42, adding 8 gives 50, and float(50) gives 50.0."
+    }
+  ],
+  "challenge": {
+    "id": "challenge3",
+    "title": "Type Detective",
+    "description": "Write a program that creates one variable of each basic type (int, float, str, bool) and prints both the value and its type for each. Your output should clearly show all four types.",
+    "requirements": [
+      "Create at least one variable of each type: int, float, str, bool",
+      "Print both the value and type of each variable",
+      "All four type classes must appear in the output"
+    ],
+    "starterCode": "# Create one variable of each type\n# For each, print the value and its type\n",
+    "testCases": [
+      {
+        "expectedOutput": "/<class 'int'>/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/<class 'float'>/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/<class 'str'>/",
+        "hidden": false
+      },
+      {
+        "expectedOutput": "/<class 'bool'>/",
+        "hidden": true
+      }
+    ],
+    "bonusObjectives": [
+      {
+        "description": "Use type conversion to show the same value as different types (e.g., 42 as int, float, str, and bool)",
+        "testCase": {
+          "expectedOutput": "/(42|42\\.0|True)[\\s\\S]*(42|42\\.0|True)/",
+          "hidden": false
+        },
+        "bonusXP": 10
+      },
+      {
+        "description": "Print a formatted label before each value (e.g., \"Integer: 42\")",
+        "testCase": {
+          "expectedOutput": "/(Integer|Int|int|Float|float|String|str|Boolean|bool).*:/i",
+          "hidden": false
+        },
+        "bonusXP": 10
+      }
+    ]
+  }
+}

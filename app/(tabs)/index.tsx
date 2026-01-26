@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   StyleSheet,
   View,
@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'expo-router';
 import { usePython } from '@/components/code/PythonRunner';
 import { useProgressStore } from '@/stores/progressStore';
+import { useWorld } from '@/hooks/useWorld';
 import Colors from '@/constants/Colors';
 
 export default function HomeScreen() {
@@ -20,6 +21,15 @@ export default function HomeScreen() {
   const { runCode, isReady, isRunning } = usePython();
   const totalXP = useProgressStore((s) => s.totalXP);
   const streak = useProgressStore((s) => s.streak);
+  const world1 = useWorld('world1');
+
+  const nextLevel = useMemo(() => {
+    // Find first in_progress or available level
+    const inProgress = world1.levels.find((l) => l.status === 'in_progress');
+    if (inProgress) return inProgress;
+    const available = world1.levels.find((l) => l.status === 'available');
+    return available ?? world1.levels[0] ?? null;
+  }, [world1.levels]);
 
   const [code, setCode] = useState('print("Hello, PyQuest!")');
   const [output, setOutput] = useState('');
@@ -116,26 +126,30 @@ export default function HomeScreen() {
         )}
       </View>
 
-      <Pressable
-        style={[styles.card, styles.levelCard, { backgroundColor: colors.card, borderColor: Colors.brand.primary + '40' }]}
-        onPress={() => router.push('/world/world1/level/level1')}
-      >
-        <View style={styles.levelCardHeader}>
-          <Text style={styles.levelCardIcon}>{'\U0001F40D'}</Text>
-          <View style={styles.levelCardBadge}>
-            <Text style={styles.levelCardBadgeText}>World 1</Text>
+      {nextLevel && (
+        <Pressable
+          style={[styles.card, styles.levelCard, { backgroundColor: colors.card, borderColor: Colors.brand.primary + '40' }]}
+          onPress={() => router.push(`/world/world1/level/${nextLevel.id}`)}
+        >
+          <View style={styles.levelCardHeader}>
+            <Text style={styles.levelCardIcon}>{'\uD83D\uDC0D'}</Text>
+            <View style={styles.levelCardBadge}>
+              <Text style={styles.levelCardBadgeText}>World 1</Text>
+            </View>
           </View>
-        </View>
-        <Text style={[styles.cardTitle, { color: colors.text }]}>
-          Hello, Python!
-        </Text>
-        <Text style={[styles.cardSubtitle, { color: colors.subtle, marginBottom: 0 }]}>
-          Learn print() and strings — your first Python program
-        </Text>
-        <View style={styles.levelCardArrow}>
-          <Text style={styles.levelCardArrowText}>Start Level 1 {'\u2192'}</Text>
-        </View>
-      </Pressable>
+          <Text style={[styles.cardTitle, { color: colors.text }]}>
+            {nextLevel.title}
+          </Text>
+          <Text style={[styles.cardSubtitle, { color: colors.subtle, marginBottom: 0 }]}>
+            {nextLevel.concept}
+          </Text>
+          <View style={styles.levelCardArrow}>
+            <Text style={styles.levelCardArrowText}>
+              {nextLevel.status === 'in_progress' ? 'Continue' : 'Start'} {'\u2192'}
+            </Text>
+          </View>
+        </Pressable>
+      )}
     </ScrollView>
   );
 }
