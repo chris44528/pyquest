@@ -26,6 +26,7 @@ export default function RootLayout() {
     <PythonProvider>
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="world" />
       </Stack>
       <StatusBar style="auto" />
     </PythonProvider>

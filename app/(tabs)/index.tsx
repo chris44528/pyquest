@@ -8,6 +8,7 @@ import {
   ScrollView,
   useColorScheme,
 } from 'react-native';
+import { useRouter } from 'expo-router';
 import { usePython } from '@/components/code/PythonRunner';
 import { useProgressStore } from '@/stores/progressStore';
 import Colors from '@/constants/Colors';
@@ -15,6 +16,7 @@ import Colors from '@/constants/Colors';
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'dark'];
+  const router = useRouter();
   const { runCode, isReady, isRunning } = usePython();
   const totalXP = useProgressStore((s) => s.totalXP);
   const streak = useProgressStore((s) => s.streak);
@@ -114,14 +116,26 @@ export default function HomeScreen() {
         )}
       </View>
 
-      <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
+      <Pressable
+        style={[styles.card, styles.levelCard, { backgroundColor: colors.card, borderColor: Colors.brand.primary + '40' }]}
+        onPress={() => router.push('/world/world1/level/level1')}
+      >
+        <View style={styles.levelCardHeader}>
+          <Text style={styles.levelCardIcon}>{'\U0001F40D'}</Text>
+          <View style={styles.levelCardBadge}>
+            <Text style={styles.levelCardBadgeText}>World 1</Text>
+          </View>
+        </View>
         <Text style={[styles.cardTitle, { color: colors.text }]}>
-          Continue Learning
+          Hello, Python!
         </Text>
-        <Text style={[styles.cardSubtitle, { color: colors.subtle }]}>
-          World 1: Foundations - Coming Soon
+        <Text style={[styles.cardSubtitle, { color: colors.subtle, marginBottom: 0 }]}>
+          Learn print() and strings — your first Python program
         </Text>
-      </View>
+        <View style={styles.levelCardArrow}>
+          <Text style={styles.levelCardArrowText}>Start Level 1 {'\u2192'}</Text>
+        </View>
+      </Pressable>
     </ScrollView>
   );
 }
@@ -212,5 +226,41 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: 'SpaceMono',
     lineHeight: 20,
+  },
+  levelCard: {
+    borderWidth: 1.5,
+  },
+  levelCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 10,
+  },
+  levelCardIcon: {
+    fontSize: 24,
+  },
+  levelCardBadge: {
+    backgroundColor: Colors.brand.primary + '25',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
+  levelCardBadgeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: Colors.brand.primaryLight,
+  },
+  levelCardArrow: {
+    marginTop: 12,
+    alignSelf: 'flex-start',
+    backgroundColor: Colors.brand.primary,
+    borderRadius: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  levelCardArrowText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: '700',
   },
 });
