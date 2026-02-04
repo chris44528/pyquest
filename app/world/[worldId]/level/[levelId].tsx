@@ -21,17 +21,23 @@ import { usePython } from '@/components/code/PythonRunner';
 import { useLevel } from '@/hooks/useLevel';
 import { useExercise } from '@/hooks/useExercise';
 import { useProgressStore } from '@/stores/progressStore';
+import { useAchievements } from '@/hooks/useAchievements';
 import { PaginatedLesson } from '@/components/lesson/PaginatedLesson';
 import { ExerciseCard } from '@/components/exercise/ExerciseCard';
 import { CodeEditor } from '@/components/code/CodeEditor';
 import { Console } from '@/components/code/Console';
-import { LevelComplete } from '@/components/gamification/LevelComplete';
+import { StarRating } from '@/components/gamification/StarRating';
+import { XPCounter } from '@/components/gamification/XPCounter';
+import { XPBreakdownCard } from '@/components/gamification/XPBreakdownCard';
+import { ConfettiEffect } from '@/components/gamification/ConfettiEffect';
 import { ComboBadge } from '@/components/gamification/ComboBadge';
-import { useAchievementToast } from '@/components/gamification/AchievementProvider';
-import { checkAchievements } from '@/lib/achievementChecker';
-import { tapHaptic } from '@/lib/haptics';
 import { runTests, type RunCodeFn } from '@/lib/testRunner';
-import type { StarRating } from '@/types/progression';
+import { calculateLevelXP, type XPBreakdown } from '@/lib/xpCalculator';
+import { triggerHaptic, tapHaptic } from '@/lib/haptics';
+import { playSound } from '@/lib/sounds';
+import { getLevelIds } from '@/lib/contentLoader';
+import type { StarRating as StarRatingType } from '@/types/progression';
+import type { Achievement } from '@/types/progression';
 import type { ConsoleEntry } from '@/types/python';
 import Colors from '@/constants/Colors';
 
@@ -130,7 +136,7 @@ function PhaseAnnouncement({
 
 function calculateStars(
   exerciseResults: { firstTry: boolean; hintsUsed: number }[],
-): StarRating {
+): StarRatingType {
   if (exerciseResults.length === 0) return 1;
   const perfectCount = exerciseResults.filter(
     (r) => r.firstTry && r.hintsUsed === 0,
@@ -148,9 +154,9 @@ export default function LevelScreen() {
   }>();
   const router = useRouter();
   const { runCode, isReady } = usePython();
-  const { showAchievements } = useAchievementToast();
 
   const { level, isLoading, error } = useLevel(worldId ?? '', levelId ?? '');
+  const { checkAfterLevel } = useAchievements();
 
   const initLevelProgress = useProgressStore((s) => s.initLevelProgress);
   const completeExercise = useProgressStore((s) => s.completeExercise);
@@ -158,7 +164,7 @@ export default function LevelScreen() {
   const updateStreak = useProgressStore((s) => s.updateStreak);
   const saveBestTime = useProgressStore((s) => s.saveBestTime);
   const totalXP = useProgressStore((s) => s.totalXP);
-
+  const streak = useProgressStore((s) => s.streak);
   const [phase, setPhase] = useState<LevelPhase>('lesson');
   const [xpBefore, setXpBefore] = useState(0);
   const [exerciseStartTime, setExerciseStartTime] = useState(0);
@@ -183,8 +189,11 @@ export default function LevelScreen() {
   const [challengeCode, setChallengeCode] = useState('');
   const [bonusPassed, setBonusPassed] = useState<boolean[]>([]);
 
-  // Stars for completion screen
-  const [earnedStars, setEarnedStars] = useState<StarRating>(1);
+  // Complete phase state
+  const [earnedStars, setEarnedStars] = useState<StarRatingType>(1);
+  const [xpBreakdownData, setXpBreakdownData] = useState<XPBreakdown | null>(null);
+  const [isWorldComplete, setIsWorldComplete] = useState(false);
+  const [unlockedAchievements, setUnlockedAchievements] = useState<Achievement[]>([]);
 
   const exercises = level?.exercises ?? [];
   const exerciseHook = useExercise(exercises);
@@ -356,26 +365,61 @@ export default function LevelScreen() {
     setChallengeRunning(false);
   };
 
-  const unlockAchievement = useProgressStore((s) => s.unlockAchievement);
-
   const handleComplete = () => {
     const stars = calculateStars(exerciseHook.exerciseResults);
     setEarnedStars(stars);
+
+    // Calculate elapsed time
+    const elapsed = exerciseStartTime > 0
+      ? Math.round((Date.now() - exerciseStartTime) / 1000)
+      : 0;
+
+    // Calculate XP breakdown
+    const isBoss = level?.id === 'level10'; // Boss level
+    const bonusCount = bonusPassed.filter(Boolean).length;
+    const breakdown = calculateLevelXP({
+      stars,
+      isBoss,
+      bonusObjectivesPassed: bonusCount,
+      exerciseResults: exerciseHook.exerciseResults.map((r) => ({
+        hintsUsed: r.hintsUsed,
+        attempts: r.attempts,
+      })),
+      streakDays: streak.current,
+    });
+    setXpBreakdownData(breakdown);
+
+    // Complete level in store
     completeLevel(levelId ?? '', stars);
     updateStreak();
-    if (exerciseStartTime > 0) {
-      const elapsed = Math.round((Date.now() - exerciseStartTime) / 1000);
+    if (elapsed > 0) {
       saveBestTime(levelId ?? '', elapsed);
     }
 
-    const currentProgress = useProgressStore.getState();
-    const newAchievements = checkAchievements(currentProgress);
-    for (const achievement of newAchievements) {
-      unlockAchievement(achievement);
-    }
-    if (newAchievements.length > 0) {
-      setTimeout(() => showAchievements(newAchievements), 2000);
-    }
+    // Fire haptics
+    triggerHaptic('success');
+    playSound('levelComplete');
+
+    // Check world completion
+    const wId = worldId ?? '';
+    const allLevelIds = getLevelIds(wId);
+    const updatedProgress = useProgressStore.getState().levelProgress;
+    const allComplete = allLevelIds.every(
+      (id) => updatedProgress[id]?.status === 'completed',
+    );
+    setIsWorldComplete(allComplete);
+
+    // Check achievements
+    const newAchievements = checkAfterLevel(
+      levelId ?? '',
+      stars,
+      elapsed,
+      exerciseHook.exerciseResults.map((r) => ({
+        hintsUsed: r.hintsUsed,
+        attempts: r.attempts,
+      })),
+    );
+    setUnlockedAchievements(newAchievements);
 
     setPhase('complete');
   };
@@ -487,7 +531,7 @@ export default function LevelScreen() {
             contentContainerStyle={styles.scrollContent}
           >
             <View style={styles.challengeHeader}>
-              <Text style={styles.challengeIcon}>{'\U0001F3AF'}</Text>
+              <Text style={styles.challengeIcon}>{'\uD83C\uDFAF'}</Text>
               <Text style={styles.challengeTitle}>{level.challenge.title}</Text>
             </View>
             <Text style={styles.challengeDescription}>
@@ -560,14 +604,69 @@ export default function LevelScreen() {
 
       {/* Phase: Complete */}
       {phase === 'complete' && (
-        <LevelComplete
-          stars={earnedStars}
-          xpEarned={totalXP - xpBefore}
-          firstTryCount={exerciseHook.exerciseResults.filter((r) => r.firstTry).length}
-          totalExercises={exerciseHook.totalExercises}
-          hintsUsed={exerciseHook.exerciseResults.reduce((sum, r) => sum + r.hintsUsed, 0)}
-          onBack={() => router.replace(`/world/${worldId}`)}
-        />
+        <ScrollView
+          contentContainerStyle={styles.completeContainer}
+        >
+          {earnedStars === 3 && <ConfettiEffect />}
+
+          <Text style={styles.completeEmoji}>
+            {isWorldComplete ? '\uD83C\uDF0D' : '\uD83C\uDF89'}
+          </Text>
+          <Text style={styles.completeTitle}>
+            {isWorldComplete ? 'World Complete!' : 'Level Complete!'}
+          </Text>
+
+          <StarRating stars={earnedStars} animated size="large" />
+
+          <XPCounter
+            value={totalXP}
+            gained={xpBreakdownData?.total ?? (totalXP - xpBefore)}
+            size="large"
+          />
+
+          {xpBreakdownData && <XPBreakdownCard breakdown={xpBreakdownData} />}
+
+          <View style={styles.statsGrid}>
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>
+                {exerciseHook.exerciseResults.filter((r) => r.firstTry).length}/
+                {exerciseHook.totalExercises}
+              </Text>
+              <Text style={styles.statLabel}>First Try</Text>
+            </View>
+            <View style={styles.statItem}>
+              <Text style={styles.statValue}>
+                {exerciseHook.exerciseResults.reduce(
+                  (sum, r) => sum + r.hintsUsed,
+                  0,
+                )}
+              </Text>
+              <Text style={styles.statLabel}>Hints Used</Text>
+            </View>
+          </View>
+
+          {unlockedAchievements.length > 0 && (
+            <View style={styles.achievementsSection}>
+              <Text style={styles.achievementsTitle}>Achievements Unlocked!</Text>
+              {unlockedAchievements.map((a) => (
+                <View key={a.id} style={styles.achievementItem}>
+                  <Text style={styles.achievementIcon}>{a.icon}</Text>
+                  <View style={styles.achievementInfo}>
+                    <Text style={styles.achievementName}>{a.name}</Text>
+                    <Text style={styles.achievementDesc}>{a.description}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
+
+          <Pressable
+            style={styles.primaryButton}
+            onPress={() => router.replace(`/world/${worldId}`)}
+          >
+            <Text style={styles.primaryButtonText}>Back to Levels</Text>
+          </Pressable>
+        </ScrollView>
       )}
     </>
   );
@@ -760,5 +859,79 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 19,
     color: '#e5e7eb',
+  },
+  completeContainer: {
+    backgroundColor: Colors.dark.background,
+    alignItems: 'center',
+    padding: 24,
+    paddingBottom: 40,
+    gap: 16,
+  },
+  completeEmoji: {
+    fontSize: 56,
+    marginTop: 20,
+  },
+  completeTitle: {
+    fontSize: 28,
+    fontWeight: '800',
+    color: '#f8f9fa',
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    gap: 16,
+    width: '100%',
+  },
+  statItem: {
+    backgroundColor: Colors.dark.card,
+    borderRadius: 12,
+    padding: 16,
+    alignItems: 'center',
+    flex: 1,
+  },
+  statValue: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#f8f9fa',
+  },
+  statLabel: {
+    fontSize: 12,
+    color: Colors.dark.subtle,
+    marginTop: 4,
+  },
+  achievementsSection: {
+    width: '100%',
+    backgroundColor: Colors.dark.card,
+    borderRadius: 16,
+    padding: 16,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: Colors.brand.accent + '30',
+  },
+  achievementsTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: Colors.brand.accent,
+    textAlign: 'center',
+  },
+  achievementItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  achievementIcon: {
+    fontSize: 24,
+  },
+  achievementInfo: {
+    flex: 1,
+  },
+  achievementName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#f8f9fa',
+  },
+  achievementDesc: {
+    fontSize: 12,
+    color: Colors.dark.subtle,
+    marginTop: 2,
   },
 });

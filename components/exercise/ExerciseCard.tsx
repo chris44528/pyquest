@@ -16,7 +16,7 @@ import { MultipleChoice } from './MultipleChoice';
 import { CodeBlock } from '@/components/lesson/CodeBlock';
 import { XPFloater } from '@/components/gamification/XPFloater';
 import { successHaptic, errorHaptic } from '@/lib/haptics';
-import { playCorrect, playWrong } from '@/lib/sounds';
+import { playSound } from '@/lib/sounds';
 import Colors from '@/constants/Colors';
 
 interface ExerciseCardProps {
@@ -99,7 +99,7 @@ export function ExerciseCard({
           withSpring(1, { damping: 12, stiffness: 150 }),
         );
         successHaptic();
-        playCorrect();
+        playSound('xpGain');
         onComplete(exercise.id, newAttempts, hintsRevealed);
       } else {
         const remaining = 3 - newAttempts;
@@ -115,7 +115,7 @@ export function ExerciseCard({
           setHintsRevealed(1);
         }
         errorHaptic();
-        playWrong();
+        playSound('xpGain');
         triggerShake();
       }
       setIsChecking(false);

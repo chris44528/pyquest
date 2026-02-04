@@ -6,7 +6,7 @@ import Animated, {
   withTiming,
   withSpring,
 } from 'react-native-reanimated';
-import { playAchievement } from '@/lib/sounds';
+import { playSound } from '@/lib/sounds';
 import { celebrationHaptic } from '@/lib/haptics';
 import Colors from '@/constants/Colors';
 import type { Achievement } from '@/types/progression';
@@ -23,7 +23,7 @@ export function AchievementToast({ achievement, onDismiss }: AchievementToastPro
 
   useEffect(() => {
     celebrationHaptic();
-    playAchievement();
+    playSound('achievementUnlock');
 
     translateY.value = withSpring(0, { damping: 12, stiffness: 150 });
     opacity.value = withTiming(1, { duration: 200 });

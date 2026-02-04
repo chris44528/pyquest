@@ -10,7 +10,7 @@ import Animated, {
 import { ConfettiEffect } from './ConfettiEffect';
 import { AnimatedCounter } from './AnimatedCounter';
 import { celebrationHaptic } from '@/lib/haptics';
-import { playLevelComplete } from '@/lib/sounds';
+import { playSound } from '@/lib/sounds';
 import Colors from '@/constants/Colors';
 import type { StarRating } from '@/types/progression';
 
@@ -66,7 +66,7 @@ export function LevelComplete({
 
   useEffect(() => {
     celebrationHaptic();
-    playLevelComplete();
+    playSound('levelComplete');
     titleScale.value = withDelay(
       200,
       withSpring(1, { damping: 8, stiffness: 120 }),

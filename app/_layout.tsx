@@ -4,8 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { PythonProvider } from '@/components/code/PythonRunner';
-import { AchievementProvider } from '@/components/gamification/AchievementProvider';
-import { loadSounds } from '@/lib/sounds';
+import { AchievementPopup } from '@/components/gamification/AchievementPopup';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -17,7 +16,6 @@ export default function RootLayout() {
   useEffect(() => {
     if (fontsLoaded) {
       SplashScreen.hideAsync();
-      loadSounds();
     }
   }, [fontsLoaded]);
 
@@ -27,20 +25,19 @@ export default function RootLayout() {
 
   return (
     <PythonProvider>
-      <AchievementProvider>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="world" />
-          <Stack.Screen
-            name="settings"
-            options={{
-              presentation: 'modal',
-              headerShown: false,
-            }}
-          />
-        </Stack>
-        <StatusBar style="auto" />
-      </AchievementProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="world" />
+        <Stack.Screen
+          name="settings"
+          options={{
+            presentation: 'modal',
+            headerShown: false,
+          }}
+        />
+      </Stack>
+      <AchievementPopup />
+      <StatusBar style="auto" />
     </PythonProvider>
   );
 }

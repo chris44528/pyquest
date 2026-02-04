@@ -5,7 +5,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useProgressStore } from '@/stores/progressStore';
 import { getPlayerLevel } from '@/lib/playerLevel';
 import Colors from '@/constants/Colors';
-import allAchievements from '@/content/achievements.json';
+import type { AchievementDefinition } from '@/types/achievements';
+import achievementsData from '@/content/achievements.json';
+
+const allAchievements = achievementsData as AchievementDefinition[];
 
 export default function ProfileScreen() {
   const colorScheme = useColorScheme();
