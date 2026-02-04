@@ -5,6 +5,7 @@ import Animated, {
   useAnimatedStyle,
   withSequence,
   withTiming,
+  withSpring,
 } from 'react-native-reanimated';
 import type { Exercise } from '@/types/content';
 import { FillBlank } from './FillBlank';
@@ -13,6 +14,9 @@ import { PredictOutput } from './PredictOutput';
 import { WriteCode } from './WriteCode';
 import { MultipleChoice } from './MultipleChoice';
 import { CodeBlock } from '@/components/lesson/CodeBlock';
+import { XPFloater } from '@/components/gamification/XPFloater';
+import { successHaptic, errorHaptic } from '@/lib/haptics';
+import { playCorrect, playWrong } from '@/lib/sounds';
 import Colors from '@/constants/Colors';
 
 interface ExerciseCardProps {
@@ -45,9 +49,16 @@ export function ExerciseCard({
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isChecking, setIsChecking] = useState(false);
 
+  const [showXPFloat, setShowXPFloat] = useState(false);
+
   const shakeX = useSharedValue(0);
-  const shakeStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: shakeX.value }],
+  const successScale = useSharedValue(1);
+
+  const cardStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: shakeX.value },
+      { scale: successScale.value },
+    ],
   }));
 
   const triggerShake = () => {
@@ -82,13 +93,29 @@ export function ExerciseCard({
       if (passed) {
         setIsCorrect(true);
         setFeedback('Correct!');
+        setShowXPFloat(true);
+        successScale.value = withSequence(
+          withSpring(1.03, { damping: 8, stiffness: 200 }),
+          withSpring(1, { damping: 12, stiffness: 150 }),
+        );
+        successHaptic();
+        playCorrect();
         onComplete(exercise.id, newAttempts, hintsRevealed);
       } else {
-        setFeedback(
-          newAttempts >= 3
-            ? "Not quite. You can view the solution below."
-            : "Not quite — try again!",
-        );
+        const remaining = 3 - newAttempts;
+        if (newAttempts >= 3) {
+          setFeedback("Not quite. You can view the solution below.");
+        } else if (remaining > 0) {
+          setFeedback(`Not quite — try again! (${remaining} attempt${remaining === 1 ? '' : 's'} before solution)`);
+        } else {
+          setFeedback("Not quite — try again!");
+        }
+        // Auto-reveal first hint on first wrong answer
+        if (newAttempts === 1 && hintsRevealed === 0 && exercise.hints.length > 0) {
+          setHintsRevealed(1);
+        }
+        errorHaptic();
+        playWrong();
         triggerShake();
       }
       setIsChecking(false);
@@ -152,7 +179,9 @@ export function ExerciseCard({
   };
 
   return (
-    <Animated.View style={[styles.card, shakeStyle]}>
+    <Animated.View style={[styles.card, cardStyle]}>
+      <XPFloater amount={15} visible={showXPFloat} />
+
       {/* Header */}
       <View style={styles.header}>
         <View style={styles.numberBadge}>
@@ -202,6 +231,14 @@ export function ExerciseCard({
           >
             {feedback}
           </Text>
+        </View>
+      )}
+
+      {/* Explanation help after first wrong answer */}
+      {!isCorrect && attempts >= 1 && !showSolution && (
+        <View style={styles.helpSection}>
+          <Text style={styles.helpLabel}>{'\U0001F4D6'} Reminder</Text>
+          <Text style={styles.helpText}>{exercise.explanation}</Text>
         </View>
       )}
 
@@ -378,5 +415,23 @@ const styles = StyleSheet.create({
   errorText: {
     color: '#f87171',
     fontSize: 14,
+  },
+  helpSection: {
+    backgroundColor: Colors.brand.primary + '12',
+    borderRadius: 10,
+    padding: 12,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.brand.primaryLight,
+  },
+  helpLabel: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: Colors.brand.primaryLight,
+    marginBottom: 4,
+  },
+  helpText: {
+    fontSize: 13,
+    lineHeight: 19,
+    color: '#d1d5db',
   },
 });

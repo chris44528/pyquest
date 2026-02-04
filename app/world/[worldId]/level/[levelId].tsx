@@ -6,22 +6,127 @@ import {
   ScrollView,
   Pressable,
   ActivityIndicator,
+  Dimensions,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withSequence,
+  withSpring,
+  withDelay,
+} from 'react-native-reanimated';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { usePython } from '@/components/code/PythonRunner';
 import { useLevel } from '@/hooks/useLevel';
 import { useExercise } from '@/hooks/useExercise';
 import { useProgressStore } from '@/stores/progressStore';
-import { LessonContent } from '@/components/lesson/LessonContent';
+import { PaginatedLesson } from '@/components/lesson/PaginatedLesson';
 import { ExerciseCard } from '@/components/exercise/ExerciseCard';
 import { CodeEditor } from '@/components/code/CodeEditor';
 import { Console } from '@/components/code/Console';
+import { LevelComplete } from '@/components/gamification/LevelComplete';
+import { ComboBadge } from '@/components/gamification/ComboBadge';
+import { useAchievementToast } from '@/components/gamification/AchievementProvider';
+import { checkAchievements } from '@/lib/achievementChecker';
+import { tapHaptic } from '@/lib/haptics';
 import { runTests, type RunCodeFn } from '@/lib/testRunner';
 import type { StarRating } from '@/types/progression';
 import type { ConsoleEntry } from '@/types/python';
 import Colors from '@/constants/Colors';
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
 type LevelPhase = 'lesson' | 'exercises' | 'challenge' | 'complete';
+
+function ProgressBar({
+  phase,
+  completedCount,
+  totalExercises,
+}: {
+  phase: LevelPhase;
+  completedCount: number;
+  totalExercises: number;
+}) {
+  const progressWidth = useSharedValue(10);
+
+  useEffect(() => {
+    let target = 10;
+    if (phase === 'exercises') {
+      target = 10 + (totalExercises > 0 ? (completedCount / totalExercises) * 70 : 0);
+    } else if (phase === 'challenge') {
+      target = 85;
+    } else if (phase === 'complete') {
+      target = 100;
+    }
+    progressWidth.value = withTiming(target, { duration: 400 });
+  }, [phase, completedCount, totalExercises]);
+
+  const fillStyle = useAnimatedStyle(() => ({
+    width: `${progressWidth.value}%` as `${number}%`,
+  }));
+
+  return (
+    <View style={styles.progressBarContainer}>
+      <Animated.View style={[styles.progressBarFill, fillStyle]} />
+      <View style={styles.progressLabels}>
+        <Text style={[styles.progressLabel, phase === 'lesson' && styles.progressLabelActive]}>
+          Lesson
+        </Text>
+        <Text style={[styles.progressLabel, phase === 'exercises' && styles.progressLabelActive]}>
+          Exercises {completedCount}/{totalExercises}
+        </Text>
+        <Text style={[styles.progressLabel, phase === 'challenge' && styles.progressLabelActive]}>
+          Challenge
+        </Text>
+      </View>
+    </View>
+  );
+}
+
+function PhaseAnnouncement({
+  text,
+  visible,
+  onDone,
+}: {
+  text: string;
+  visible: boolean;
+  onDone: () => void;
+}) {
+  const scale = useSharedValue(0.5);
+  const opacity = useSharedValue(0);
+
+  useEffect(() => {
+    if (visible) {
+      scale.value = withSequence(
+        withSpring(1.1, { damping: 8, stiffness: 200 }),
+        withSpring(1, { damping: 12 }),
+      );
+      opacity.value = withSequence(
+        withTiming(1, { duration: 150 }),
+        withDelay(300, withTiming(0, { duration: 200 })),
+      );
+
+      const timer = setTimeout(onDone, 650);
+      return () => clearTimeout(timer);
+    }
+  }, [visible]);
+
+  const animStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
+
+  if (!visible) return null;
+
+  return (
+    <View style={styles.announcementOverlay}>
+      <Animated.View style={[styles.announcementBadge, animStyle]}>
+        <Text style={styles.announcementText}>{text}</Text>
+      </Animated.View>
+    </View>
+  );
+}
 
 function calculateStars(
   exerciseResults: { firstTry: boolean; hintsUsed: number }[],
@@ -43,6 +148,7 @@ export default function LevelScreen() {
   }>();
   const router = useRouter();
   const { runCode, isReady } = usePython();
+  const { showAchievements } = useAchievementToast();
 
   const { level, isLoading, error } = useLevel(worldId ?? '', levelId ?? '');
 
@@ -56,6 +162,19 @@ export default function LevelScreen() {
   const [phase, setPhase] = useState<LevelPhase>('lesson');
   const [xpBefore, setXpBefore] = useState(0);
   const [exerciseStartTime, setExerciseStartTime] = useState(0);
+
+  // Phase transition state
+  const [showAnnouncement, setShowAnnouncement] = useState(false);
+  const [announcementText, setAnnouncementText] = useState('');
+  const [pendingPhase, setPendingPhase] = useState<LevelPhase | null>(null);
+
+  // Phase content animation
+  const phaseOpacity = useSharedValue(1);
+  const phaseTranslateX = useSharedValue(0);
+
+  // Exercise transition animation
+  const exerciseOpacity = useSharedValue(1);
+  const exerciseTranslateX = useSharedValue(0);
 
   // Challenge state
   const [challengeEntries, setChallengeEntries] = useState<ConsoleEntry[]>([]);
@@ -81,12 +200,58 @@ export default function LevelScreen() {
     }
   }, [level?.id, initLevelProgress]);
 
+  const animatePhaseTransition = useCallback(
+    (targetPhase: LevelPhase, announcement?: string) => {
+      if (announcement) {
+        tapHaptic();
+        setAnnouncementText(announcement);
+        setShowAnnouncement(true);
+        setPendingPhase(targetPhase);
+      } else {
+        phaseOpacity.value = withTiming(0, { duration: 150 });
+        phaseTranslateX.value = withTiming(-30, { duration: 150 });
+
+        setTimeout(() => {
+          setPhase(targetPhase);
+          phaseTranslateX.value = 30;
+          phaseOpacity.value = withTiming(1, { duration: 200 });
+          phaseTranslateX.value = withTiming(0, { duration: 200 });
+        }, 160);
+      }
+    },
+    [],
+  );
+
+  const handleAnnouncementDone = useCallback(() => {
+    setShowAnnouncement(false);
+    if (pendingPhase) {
+      setPhase(pendingPhase);
+      setPendingPhase(null);
+      phaseOpacity.value = 0;
+      phaseTranslateX.value = 30;
+      phaseOpacity.value = withTiming(1, { duration: 250 });
+      phaseTranslateX.value = withTiming(0, { duration: 250 });
+    }
+  }, [pendingPhase]);
+
+  const phaseContentStyle = useAnimatedStyle(() => ({
+    opacity: phaseOpacity.value,
+    transform: [{ translateX: phaseTranslateX.value }],
+  }));
+
+  const exerciseContentStyle = useAnimatedStyle(() => ({
+    opacity: exerciseOpacity.value,
+    transform: [{ translateX: exerciseTranslateX.value }],
+  }));
+
   const handleExerciseComplete = useCallback(
     (exerciseId: string, attempts: number, hintsUsed: number) => {
-      completeExercise(levelId ?? '', exerciseId, hintsUsed, attempts);
+      const nextCombo = (attempts === 1 && hintsUsed === 0) ? exerciseHook.combo + 1 : 0;
+      const comboMultiplier = nextCombo > 1 ? nextCombo : undefined;
+      completeExercise(levelId ?? '', exerciseId, hintsUsed, attempts, undefined, comboMultiplier);
       exerciseHook.markComplete(exerciseId, attempts, hintsUsed);
     },
-    [completeExercise, levelId, exerciseHook.markComplete],
+    [completeExercise, levelId, exerciseHook.markComplete, exerciseHook.combo],
   );
 
   const handleValidateCode = useCallback(
@@ -102,14 +267,26 @@ export default function LevelScreen() {
     [exerciseHook.currentExercise, runCode],
   );
 
+  const handleNextExercise = useCallback(() => {
+    exerciseOpacity.value = withTiming(0, { duration: 150 });
+    exerciseTranslateX.value = withTiming(-SCREEN_WIDTH * 0.3, { duration: 150 });
+
+    setTimeout(() => {
+      exerciseHook.nextExercise();
+      exerciseTranslateX.value = SCREEN_WIDTH * 0.3;
+      exerciseOpacity.value = withTiming(1, { duration: 200 });
+      exerciseTranslateX.value = withTiming(0, { duration: 200 });
+    }, 160);
+  }, [exerciseHook.nextExercise]);
+
   const goToExercises = () => {
     setXpBefore(totalXP);
     setExerciseStartTime(Date.now());
-    setPhase('exercises');
+    animatePhaseTransition('exercises', 'Exercises');
   };
 
   const goToChallenge = () => {
-    setPhase('challenge');
+    animatePhaseTransition('challenge', 'Challenge');
   };
 
   const handleChallengeRun = async (code: string) => {
@@ -146,7 +323,6 @@ export default function LevelScreen() {
     );
 
     if (result.allPassed) {
-      // Check bonus objectives
       const bonusResults: boolean[] = [];
       if (level.challenge.bonusObjectives) {
         for (const bonus of level.challenge.bonusObjectives) {
@@ -180,6 +356,8 @@ export default function LevelScreen() {
     setChallengeRunning(false);
   };
 
+  const unlockAchievement = useProgressStore((s) => s.unlockAchievement);
+
   const handleComplete = () => {
     const stars = calculateStars(exerciseHook.exerciseResults);
     setEarnedStars(stars);
@@ -189,10 +367,19 @@ export default function LevelScreen() {
       const elapsed = Math.round((Date.now() - exerciseStartTime) / 1000);
       saveBestTime(levelId ?? '', elapsed);
     }
+
+    const currentProgress = useProgressStore.getState();
+    const newAchievements = checkAchievements(currentProgress);
+    for (const achievement of newAchievements) {
+      unlockAchievement(achievement);
+    }
+    if (newAchievements.length > 0) {
+      setTimeout(() => showAchievements(newAchievements), 2000);
+    }
+
     setPhase('complete');
   };
 
-  // Loading state
   if (isLoading) {
     return (
       <>
@@ -205,7 +392,6 @@ export default function LevelScreen() {
     );
   }
 
-  // Error state
   if (error || !level) {
     return (
       <>
@@ -230,214 +416,158 @@ export default function LevelScreen() {
         }}
       />
 
-      {/* Progress bar */}
-      <View style={styles.progressBarContainer}>
-        <View
-          style={[
-            styles.progressBarFill,
-            {
-              width:
-                phase === 'lesson'
-                  ? '10%'
-                  : phase === 'exercises'
-                    ? `${10 + ((exerciseHook.totalExercises > 0 ? exerciseHook.completedCount / exerciseHook.totalExercises : 0) * 70)}%`
-                    : phase === 'challenge'
-                      ? '85%'
-                      : '100%',
-            },
-          ]}
-        />
-        <View style={styles.progressLabels}>
-          <Text style={[styles.progressLabel, phase === 'lesson' && styles.progressLabelActive]}>
-            Lesson
-          </Text>
-          <Text style={[styles.progressLabel, phase === 'exercises' && styles.progressLabelActive]}>
-            Exercises {exerciseHook.completedCount}/{exerciseHook.totalExercises}
-          </Text>
-          <Text style={[styles.progressLabel, phase === 'challenge' && styles.progressLabelActive]}>
-            Challenge
-          </Text>
-        </View>
-      </View>
+      <ProgressBar
+        phase={phase}
+        completedCount={exerciseHook.completedCount}
+        totalExercises={exerciseHook.totalExercises}
+      />
+
+      <PhaseAnnouncement
+        text={announcementText}
+        visible={showAnnouncement}
+        onDone={handleAnnouncementDone}
+      />
 
       {/* Phase: Lesson */}
       {phase === 'lesson' && (
-        <View style={styles.phaseContainer}>
-          <LessonContent content={level.content} onCodeRun={handleChallengeRun} />
-          <View style={styles.bottomAction}>
-            <Pressable style={styles.primaryButton} onPress={goToExercises}>
-              <Text style={styles.primaryButtonText}>
-                Continue to Exercises {'\u2192'}
-              </Text>
-            </Pressable>
-          </View>
-        </View>
+        <PaginatedLesson
+          content={level.content}
+          onCodeRun={runCode}
+          onComplete={goToExercises}
+        />
       )}
 
       {/* Phase: Exercises */}
       {phase === 'exercises' && exerciseHook.currentExercise && (
-        <ScrollView
-          style={styles.phaseContainer}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <ExerciseCard
-            exercise={exerciseHook.currentExercise}
-            exerciseNumber={exerciseHook.currentIndex + 1}
-            totalExercises={exerciseHook.totalExercises}
-            onComplete={handleExerciseComplete}
-            runCode={runCode}
-            validateCode={handleValidateCode}
-          />
+        <Animated.View style={[{ flex: 1 }, phaseContentStyle]}>
+          <ScrollView
+            style={styles.phaseContainer}
+            contentContainerStyle={styles.scrollContent}
+          >
+            <ComboBadge combo={exerciseHook.combo} />
 
-          {exerciseHook.isAllComplete ? (
-            <Pressable style={styles.primaryButton} onPress={goToChallenge}>
-              <Text style={styles.primaryButtonText}>
-                Continue to Challenge {'\u2192'}
-              </Text>
-            </Pressable>
-          ) : (
-            exerciseHook.completedCount > exerciseHook.currentIndex && (
-              <Pressable
-                style={styles.secondaryButton}
-                onPress={exerciseHook.nextExercise}
-              >
-                <Text style={styles.secondaryButtonText}>
-                  Next Exercise {'\u2192'}
+            <Animated.View style={exerciseContentStyle}>
+              <ExerciseCard
+                exercise={exerciseHook.currentExercise}
+                exerciseNumber={exerciseHook.currentIndex + 1}
+                totalExercises={exerciseHook.totalExercises}
+                onComplete={handleExerciseComplete}
+                runCode={runCode}
+                validateCode={handleValidateCode}
+              />
+            </Animated.View>
+
+            {exerciseHook.isAllComplete ? (
+              <Pressable style={styles.primaryButton} onPress={goToChallenge}>
+                <Text style={styles.primaryButtonText}>
+                  Continue to Challenge {'\u2192'}
                 </Text>
               </Pressable>
-            )
-          )}
-        </ScrollView>
+            ) : (
+              exerciseHook.completedCount > exerciseHook.currentIndex && (
+                <Pressable
+                  style={styles.secondaryButton}
+                  onPress={handleNextExercise}
+                >
+                  <Text style={styles.secondaryButtonText}>
+                    Next Exercise {'\u2192'}
+                  </Text>
+                </Pressable>
+              )
+            )}
+          </ScrollView>
+        </Animated.View>
       )}
 
       {/* Phase: Challenge */}
       {phase === 'challenge' && (
-        <ScrollView
-          style={styles.phaseContainer}
-          contentContainerStyle={styles.scrollContent}
-        >
-          <View style={styles.challengeHeader}>
-            <Text style={styles.challengeIcon}>{'\U0001F3AF'}</Text>
-            <Text style={styles.challengeTitle}>{level.challenge.title}</Text>
-          </View>
-          <Text style={styles.challengeDescription}>
-            {level.challenge.description}
-          </Text>
+        <Animated.View style={[{ flex: 1 }, phaseContentStyle]}>
+          <ScrollView
+            style={styles.phaseContainer}
+            contentContainerStyle={styles.scrollContent}
+          >
+            <View style={styles.challengeHeader}>
+              <Text style={styles.challengeIcon}>{'\U0001F3AF'}</Text>
+              <Text style={styles.challengeTitle}>{level.challenge.title}</Text>
+            </View>
+            <Text style={styles.challengeDescription}>
+              {level.challenge.description}
+            </Text>
 
-          <View style={styles.requirementsList}>
-            <Text style={styles.requirementsTitle}>Requirements:</Text>
-            {level.challenge.requirements.map((req, i) => (
-              <View key={i} style={styles.requirementItem}>
-                <Text style={styles.requirementBullet}>{'\u25CB'}</Text>
-                <Text style={styles.requirementText}>{req}</Text>
-              </View>
-            ))}
-          </View>
+            <View style={styles.requirementsList}>
+              <Text style={styles.requirementsTitle}>Requirements:</Text>
+              {level.challenge.requirements.map((req, i) => (
+                <View key={i} style={styles.requirementItem}>
+                  <Text style={styles.requirementBullet}>{'\u25CB'}</Text>
+                  <Text style={styles.requirementText}>{req}</Text>
+                </View>
+              ))}
+            </View>
 
-          {level.challenge.bonusObjectives &&
-            level.challenge.bonusObjectives.length > 0 && (
-              <View style={styles.bonusList}>
-                <Text style={styles.bonusTitle}>{'\u2B50'} Bonus:</Text>
-                {level.challenge.bonusObjectives.map((bonus, i) => (
-                  <View key={i} style={styles.bonusItem}>
-                    <Text style={styles.bonusBullet}>
-                      {bonusPassed[i] ? '\u2705' : '\u2606'}
-                    </Text>
-                    <Text style={styles.bonusText}>
-                      {bonus.description} (+{bonus.bonusXP} XP)
-                    </Text>
-                  </View>
-                ))}
-              </View>
+            {level.challenge.bonusObjectives &&
+              level.challenge.bonusObjectives.length > 0 && (
+                <View style={styles.bonusList}>
+                  <Text style={styles.bonusTitle}>{'\u2B50'} Bonus:</Text>
+                  {level.challenge.bonusObjectives.map((bonus, i) => (
+                    <View key={i} style={styles.bonusItem}>
+                      <Text style={styles.bonusBullet}>
+                        {bonusPassed[i] ? '\u2705' : '\u2606'}
+                      </Text>
+                      <Text style={styles.bonusText}>
+                        {bonus.description} (+{bonus.bonusXP} XP)
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              )}
+
+            <CodeEditor
+              initialCode={level.challenge.starterCode}
+              onCodeChange={setChallengeCode}
+              onRun={handleChallengeRun}
+              showRunButton={isReady}
+              showLineNumbers
+              minHeight={140}
+            />
+
+            <Console
+              entries={challengeEntries}
+              isRunning={challengeRunning}
+              maxHeight={150}
+            />
+
+            {challengePassed ? (
+              <Pressable style={styles.primaryButton} onPress={handleComplete}>
+                <Text style={styles.primaryButtonText}>
+                  Complete Level {'\u2192'}
+                </Text>
+              </Pressable>
+            ) : (
+              <Pressable
+                style={[
+                  styles.primaryButton,
+                  challengeRunning && styles.buttonDisabled,
+                ]}
+                onPress={handleChallengeSubmit}
+                disabled={challengeRunning}
+              >
+                <Text style={styles.primaryButtonText}>Submit Challenge</Text>
+              </Pressable>
             )}
-
-          <CodeEditor
-            initialCode={level.challenge.starterCode}
-            onCodeChange={setChallengeCode}
-            onRun={handleChallengeRun}
-            showRunButton={isReady}
-            showLineNumbers
-            minHeight={140}
-          />
-
-          <Console
-            entries={challengeEntries}
-            isRunning={challengeRunning}
-            maxHeight={150}
-          />
-
-          {challengePassed ? (
-            <Pressable style={styles.primaryButton} onPress={handleComplete}>
-              <Text style={styles.primaryButtonText}>
-                Complete Level {'\u2192'}
-              </Text>
-            </Pressable>
-          ) : (
-            <Pressable
-              style={[
-                styles.primaryButton,
-                challengeRunning && styles.buttonDisabled,
-              ]}
-              onPress={handleChallengeSubmit}
-              disabled={challengeRunning}
-            >
-              <Text style={styles.primaryButtonText}>Submit Challenge</Text>
-            </Pressable>
-          )}
-        </ScrollView>
+          </ScrollView>
+        </Animated.View>
       )}
 
       {/* Phase: Complete */}
       {phase === 'complete' && (
-        <View style={styles.completeContainer}>
-          <Text style={styles.completeEmoji}>{'\U0001F389'}</Text>
-          <Text style={styles.completeTitle}>Level Complete!</Text>
-
-          <View style={styles.starsRow}>
-            {[1, 2, 3].map((star) => (
-              <Text
-                key={star}
-                style={[
-                  styles.star,
-                  star <= earnedStars ? styles.starEarned : styles.starEmpty,
-                ]}
-              >
-                {'\u2B50'}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.xpBreakdown}>
-            <Text style={styles.xpTitle}>XP Earned</Text>
-            <Text style={styles.xpAmount}>+{totalXP - xpBefore} XP</Text>
-          </View>
-
-          <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <Text style={styles.statValue}>
-                {exerciseHook.exerciseResults.filter((r) => r.firstTry).length}/
-                {exerciseHook.totalExercises}
-              </Text>
-              <Text style={styles.statLabel}>First Try</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statValue}>
-                {exerciseHook.exerciseResults.reduce(
-                  (sum, r) => sum + r.hintsUsed,
-                  0,
-                )}
-              </Text>
-              <Text style={styles.statLabel}>Hints Used</Text>
-            </View>
-          </View>
-
-          <Pressable
-            style={styles.primaryButton}
-            onPress={() => router.replace(`/world/${worldId}`)}
-          >
-            <Text style={styles.primaryButtonText}>Back to Levels</Text>
-          </Pressable>
-        </View>
+        <LevelComplete
+          stars={earnedStars}
+          xpEarned={totalXP - xpBefore}
+          firstTryCount={exerciseHook.exerciseResults.filter((r) => r.firstTry).length}
+          totalExercises={exerciseHook.totalExercises}
+          hintsUsed={exerciseHook.exerciseResults.reduce((sum, r) => sum + r.hintsUsed, 0)}
+          onBack={() => router.replace(`/world/${worldId}`)}
+        />
       )}
     </>
   );
@@ -501,6 +631,24 @@ const styles = StyleSheet.create({
     color: Colors.brand.primaryLight,
     fontWeight: '700',
   },
+  announcementOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
+    pointerEvents: 'none',
+  },
+  announcementBadge: {
+    backgroundColor: Colors.brand.primary,
+    borderRadius: 16,
+    paddingHorizontal: 32,
+    paddingVertical: 16,
+  },
+  announcementText: {
+    color: '#ffffff',
+    fontSize: 24,
+    fontWeight: '800',
+  },
   phaseContainer: {
     flex: 1,
     backgroundColor: Colors.dark.background,
@@ -541,7 +689,6 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.5,
   },
-  // Challenge
   challengeHeader: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -613,74 +760,5 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 19,
     color: '#e5e7eb',
-  },
-  // Complete
-  completeContainer: {
-    flex: 1,
-    backgroundColor: Colors.dark.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
-    gap: 16,
-  },
-  completeEmoji: {
-    fontSize: 56,
-  },
-  completeTitle: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#f8f9fa',
-  },
-  starsRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  star: {
-    fontSize: 36,
-  },
-  starEarned: {
-    opacity: 1,
-  },
-  starEmpty: {
-    opacity: 0.3,
-  },
-  xpBreakdown: {
-    backgroundColor: Colors.brand.xp + '20',
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 14,
-    alignItems: 'center',
-  },
-  xpTitle: {
-    fontSize: 13,
-    color: Colors.brand.xp,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-  xpAmount: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: Colors.brand.xp,
-  },
-  statsGrid: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  statItem: {
-    backgroundColor: Colors.dark.card,
-    borderRadius: 12,
-    padding: 16,
-    alignItems: 'center',
-    flex: 1,
-  },
-  statValue: {
-    fontSize: 20,
-    fontWeight: '700',
-    color: '#f8f9fa',
-  },
-  statLabel: {
-    fontSize: 12,
-    color: Colors.dark.subtle,
-    marginTop: 4,
   },
 });

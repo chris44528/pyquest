@@ -16,14 +16,17 @@ interface UseExerciseResult {
   completedCount: number;
   isAllComplete: boolean;
   exerciseResults: ExerciseResult[];
+  combo: number;
   submitAnswer: (code: string, runCodeFn: RunCodeFn) => Promise<boolean>;
   markComplete: (exerciseId: string, attempts: number, hintsUsed: number) => void;
   nextExercise: () => void;
+  breakCombo: () => void;
 }
 
 export function useExercise(exercises: Exercise[]): UseExerciseResult {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [results, setResults] = useState<ExerciseResult[]>([]);
+  const [combo, setCombo] = useState(0);
 
   const currentExercise = exercises[currentIndex] ?? null;
   const completedCount = results.length;
@@ -38,9 +41,19 @@ export function useExercise(exercises: Exercise[]): UseExerciseResult {
           { exerciseId, attempts, hintsUsed, firstTry: attempts === 1 },
         ];
       });
+      // Increment combo on first-try correct answers
+      if (attempts === 1 && hintsUsed === 0) {
+        setCombo((prev) => prev + 1);
+      } else {
+        setCombo(0);
+      }
     },
     [],
   );
+
+  const breakCombo = useCallback(() => {
+    setCombo(0);
+  }, []);
 
   const submitAnswer = useCallback(
     async (code: string, runCodeFn: RunCodeFn): Promise<boolean> => {
@@ -81,8 +94,10 @@ export function useExercise(exercises: Exercise[]): UseExerciseResult {
     completedCount,
     isAllComplete,
     exerciseResults: results,
+    combo,
     submitAnswer,
     markComplete,
     nextExercise,
+    breakCombo,
   };
 }

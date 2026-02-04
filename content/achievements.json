@@ -1,0 +1,122 @@
+[
+  {
+    "id": "first_steps",
+    "name": "First Steps",
+    "description": "Complete your first level",
+    "icon": "\ud83d\udc63",
+    "category": "progress",
+    "condition": { "type": "levels_completed", "count": 1 }
+  },
+  {
+    "id": "getting_started",
+    "name": "Getting Started",
+    "description": "Complete 3 levels",
+    "icon": "\ud83c\udf31",
+    "category": "progress",
+    "condition": { "type": "levels_completed", "count": 3 }
+  },
+  {
+    "id": "halfway_there",
+    "name": "Halfway There",
+    "description": "Complete 5 levels",
+    "icon": "\ud83c\udfc3",
+    "category": "progress",
+    "condition": { "type": "levels_completed", "count": 5 }
+  },
+  {
+    "id": "world_conqueror",
+    "name": "World Conqueror",
+    "description": "Complete all 10 levels in World 1",
+    "icon": "\ud83c\udf0d",
+    "category": "progress",
+    "condition": { "type": "levels_completed", "count": 10 }
+  },
+  {
+    "id": "on_fire",
+    "name": "On Fire",
+    "description": "Maintain a 3-day streak",
+    "icon": "\ud83d\udd25",
+    "category": "streak",
+    "condition": { "type": "streak_days", "count": 3 }
+  },
+  {
+    "id": "dedicated",
+    "name": "Dedicated",
+    "description": "Maintain a 7-day streak",
+    "icon": "\ud83d\udcaa",
+    "category": "streak",
+    "condition": { "type": "streak_days", "count": 7 }
+  },
+  {
+    "id": "unstoppable",
+    "name": "Unstoppable",
+    "description": "Maintain a 14-day streak",
+    "icon": "\u26a1",
+    "category": "streak",
+    "condition": { "type": "streak_days", "count": 14 }
+  },
+  {
+    "id": "perfect_score",
+    "name": "Perfect Score",
+    "description": "Earn 3 stars on any level",
+    "icon": "\u2b50",
+    "category": "skill",
+    "condition": { "type": "three_star_levels", "count": 1 }
+  },
+  {
+    "id": "star_collector",
+    "name": "Star Collector",
+    "description": "Earn 3 stars on 5 levels",
+    "icon": "\ud83c\udf1f",
+    "category": "skill",
+    "condition": { "type": "three_star_levels", "count": 5 }
+  },
+  {
+    "id": "no_hints_needed",
+    "name": "No Hints Needed",
+    "description": "Complete a level without using any hints",
+    "icon": "\ud83e\udde0",
+    "category": "skill",
+    "condition": { "type": "no_hint_levels", "count": 1 }
+  },
+  {
+    "id": "hint_free_master",
+    "name": "Hint-Free Master",
+    "description": "Complete 3 levels without using any hints",
+    "icon": "\ud83c\udfc6",
+    "category": "skill",
+    "condition": { "type": "no_hint_levels", "count": 3 }
+  },
+  {
+    "id": "speed_demon",
+    "name": "Speed Demon",
+    "description": "Complete a level in under 2 minutes",
+    "icon": "\u23f1\ufe0f",
+    "category": "skill",
+    "condition": { "type": "fast_level", "seconds": 120 }
+  },
+  {
+    "id": "bug_hunter",
+    "name": "Bug Hunter",
+    "description": "Complete 5 fix-the-bug exercises",
+    "icon": "\ud83d\udc1b",
+    "category": "secret",
+    "condition": { "type": "exercise_type_count", "exerciseType": "fix_bug", "count": 5 }
+  },
+  {
+    "id": "xp_century",
+    "name": "XP Century",
+    "description": "Earn 100 total XP",
+    "icon": "\ud83d\udcaf",
+    "category": "progress",
+    "condition": { "type": "total_xp", "count": 100 }
+  },
+  {
+    "id": "xp_500",
+    "name": "Rising Star",
+    "description": "Earn 500 total XP",
+    "icon": "\ud83d\ude80",
+    "category": "progress",
+    "condition": { "type": "total_xp", "count": 500 }
+  }
+]
