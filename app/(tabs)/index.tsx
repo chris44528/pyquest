@@ -12,6 +12,9 @@ import { useRouter } from 'expo-router';
 import { usePython } from '@/components/code/PythonRunner';
 import { useProgressStore } from '@/stores/progressStore';
 import { useWorld } from '@/hooks/useWorld';
+import { XPCounter } from '@/components/gamification/XPCounter';
+import { StreakBadge } from '@/components/gamification/StreakBadge';
+import { isStreakAtRisk } from '@/lib/streakUtils';
 import Colors from '@/constants/Colors';
 
 export default function HomeScreen() {
@@ -56,16 +59,20 @@ export default function HomeScreen() {
         </Text>
         <View style={styles.statsRow}>
           <View style={[styles.statBadge, { backgroundColor: Colors.brand.xp + '20' }]}>
-            <Text style={[styles.statIcon]}>&#11088;</Text>
-            <Text style={[styles.statValue, { color: Colors.brand.xp }]}>{totalXP} XP</Text>
+            <XPCounter value={totalXP} size="small" showIcon />
           </View>
-          <View style={[styles.statBadge, { backgroundColor: Colors.brand.streak + '20' }]}>
-            <Text style={styles.statIcon}>&#128293;</Text>
-            <Text style={[styles.statValue, { color: Colors.brand.streak }]}>
-              {streak.current} day{streak.current !== 1 ? 's' : ''}
+          <StreakBadge
+            current={streak.current}
+            atRisk={isStreakAtRisk(streak.lastActivityDate)}
+          />
+        </View>
+        {isStreakAtRisk(streak.lastActivityDate) && streak.current > 0 && (
+          <View style={[styles.streakWarning, { backgroundColor: Colors.brand.streak + '15' }]}>
+            <Text style={styles.streakWarningText}>
+              {'\u26A0\uFE0F'} Complete a lesson today to keep your streak!
             </Text>
           </View>
-        </View>
+        )}
       </View>
 
       <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
@@ -188,6 +195,17 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 14,
     fontWeight: '700',
+  },
+  streakWarning: {
+    marginTop: 8,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+  },
+  streakWarningText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: Colors.brand.streak,
   },
   card: {
     borderRadius: 16,
