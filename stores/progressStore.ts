@@ -13,7 +13,7 @@ import { XP_REWARDS } from '@/types/progression';
 
 interface ProgressActions {
   updateXP: (amount: number) => void;
-  completeExercise: (levelId: string, exerciseId: string, hintsUsed: number, attempts: number, lastSubmission?: string) => void;
+  completeExercise: (levelId: string, exerciseId: string, hintsUsed: number, attempts: number, lastSubmission?: string, comboMultiplier?: number) => void;
   completeLevel: (levelId: string, stars: StarRating) => void;
   updateStreak: () => void;
   unlockAchievement: (achievement: Achievement) => void;
@@ -84,7 +84,8 @@ export const useProgressStore = create<ProgressStore>()(
         exerciseId: string,
         hintsUsed: number,
         attempts: number,
-        lastSubmission?: string
+        lastSubmission?: string,
+        comboMultiplier?: number,
       ) =>
         set((state) => {
           const levelProg = state.levelProgress[levelId];
@@ -100,6 +101,11 @@ export const useProgressStore = create<ProgressStore>()(
           let xpGain = XP_REWARDS.exerciseComplete;
           if (hintsUsed === 0) xpGain = XP_REWARDS.exerciseCompleteNoHints;
           if (attempts === 1 && hintsUsed === 0) xpGain = XP_REWARDS.exerciseCompleteFirstTry;
+
+          // Apply combo multiplier (capped at x5)
+          if (comboMultiplier && comboMultiplier > 1) {
+            xpGain = Math.round(xpGain * Math.min(comboMultiplier, 5));
+          }
 
           return {
             totalXP: state.totalXP + xpGain,

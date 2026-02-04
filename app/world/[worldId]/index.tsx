@@ -1,84 +1,157 @@
+import { useEffect } from 'react';
 import { StyleSheet, View, Text, FlatList, Pressable } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withDelay,
+  withSpring,
+  withRepeat,
+  withTiming,
+  withSequence,
+} from 'react-native-reanimated';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useWorld, type LevelSummary } from '@/hooks/useWorld';
 import { StarRating } from '@/components/gamification/StarRating';
 import Colors from '@/constants/Colors';
 
-function LevelCard({ item, index, worldId }: { item: LevelSummary; index: number; worldId: string }) {
+function AnimatedLevelCard({
+  item,
+  index,
+  worldId,
+}: {
+  item: LevelSummary;
+  index: number;
+  worldId: string;
+}) {
   const router = useRouter();
   const isLocked = item.status === 'locked';
   const isCompleted = item.status === 'completed';
+  const isAvailable = item.status === 'available' || item.status === 'in_progress';
+
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(20);
+  const glowOpacity = useSharedValue(0.3);
+  const bossScale = useSharedValue(0.95);
+
+  useEffect(() => {
+    const delay = index * 80;
+    opacity.value = withDelay(delay, withSpring(1, { damping: 15 }));
+    translateY.value = withDelay(delay, withSpring(0, { damping: 12, stiffness: 120 }));
+
+    if (isAvailable && !item.isBoss) {
+      glowOpacity.value = withDelay(
+        delay + 200,
+        withRepeat(
+          withSequence(
+            withTiming(0.6, { duration: 1200 }),
+            withTiming(0.3, { duration: 1200 }),
+          ),
+          -1,
+          true,
+        ),
+      );
+    }
+
+    if (item.isBoss && !isLocked) {
+      bossScale.value = withDelay(
+        delay,
+        withSequence(
+          withSpring(1.02, { damping: 8, stiffness: 100 }),
+          withSpring(1, { damping: 10 }),
+        ),
+      );
+    }
+  }, []);
+
+  const cardAnimStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
+
+  const glowStyle = useAnimatedStyle(() => ({
+    borderColor: `rgba(108, 92, 231, ${glowOpacity.value})`,
+  }));
+
+  const bossAnimStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }, { scale: bossScale.value }],
+  }));
 
   if (item.isBoss) {
     return (
+      <Animated.View style={bossAnimStyle}>
+        <Pressable
+          style={[
+            styles.bossCard,
+            isLocked && styles.lockedCard,
+          ]}
+          onPress={() => {
+            if (!isLocked) router.push(`/world/${worldId}/level/${item.id}`);
+          }}
+          disabled={isLocked}
+        >
+          <View style={styles.bossHeader}>
+            <Text style={styles.bossIcon}>{'\uD83D\uDC09'}</Text>
+            <View style={styles.bossInfo}>
+              <Text style={[styles.bossLabel, isLocked && styles.lockedText]}>
+                BOSS LEVEL
+              </Text>
+              <Text style={[styles.bossTitle, isLocked && styles.lockedText]}>
+                {item.title}
+              </Text>
+              <Text style={[styles.bossConcept, isLocked && styles.lockedText]}>
+                {item.concept}
+              </Text>
+            </View>
+            {isLocked && <Text style={styles.lockEmoji}>{'\uD83D\uDD12'}</Text>}
+            {isCompleted && <StarRating stars={item.stars} size="small" />}
+          </View>
+        </Pressable>
+      </Animated.View>
+    );
+  }
+
+  return (
+    <Animated.View style={[cardAnimStyle, isAvailable && glowStyle, { flex: 1 }]}>
       <Pressable
         style={[
-          styles.bossCard,
+          styles.levelCard,
           isLocked && styles.lockedCard,
+          isCompleted && styles.completedCard,
+          isAvailable && styles.availableCard,
         ]}
         onPress={() => {
           if (!isLocked) router.push(`/world/${worldId}/level/${item.id}`);
         }}
         disabled={isLocked}
       >
-        <View style={styles.bossHeader}>
-          <Text style={styles.bossIcon}>{'\uD83D\uDC09'}</Text>
-          <View style={styles.bossInfo}>
-            <Text style={[styles.bossLabel, isLocked && styles.lockedText]}>
-              BOSS LEVEL
-            </Text>
-            <Text style={[styles.bossTitle, isLocked && styles.lockedText]}>
-              {item.title}
-            </Text>
-            <Text style={[styles.bossConcept, isLocked && styles.lockedText]}>
-              {item.concept}
-            </Text>
-          </View>
-          {isLocked && <Text style={styles.lockEmoji}>{'\uD83D\uDD12'}</Text>}
-          {isCompleted && <StarRating stars={item.stars} size="small" />}
+        <View style={[styles.levelNumber, isLocked && styles.levelNumberLocked]}>
+          <Text style={[styles.levelNumberText, isLocked && styles.lockedText]}>
+            {index + 1}
+          </Text>
         </View>
-      </Pressable>
-    );
-  }
-
-  return (
-    <Pressable
-      style={[
-        styles.levelCard,
-        isLocked && styles.lockedCard,
-        isCompleted && styles.completedCard,
-      ]}
-      onPress={() => {
-        if (!isLocked) router.push(`/world/${worldId}/level/${item.id}`);
-      }}
-      disabled={isLocked}
-    >
-      <View style={[styles.levelNumber, isLocked && styles.levelNumberLocked]}>
-        <Text style={[styles.levelNumberText, isLocked && styles.lockedText]}>
-          {index + 1}
+        <Text
+          style={[styles.levelTitle, isLocked && styles.lockedText]}
+          numberOfLines={1}
+        >
+          {item.title}
         </Text>
-      </View>
-      <Text
-        style={[styles.levelTitle, isLocked && styles.lockedText]}
-        numberOfLines={1}
-      >
-        {item.title}
-      </Text>
-      <Text
-        style={[styles.levelConcept, isLocked && styles.lockedText]}
-        numberOfLines={1}
-      >
-        {item.concept}
-      </Text>
-      {isLocked && <Text style={styles.lockEmoji}>{'\uD83D\uDD12'}</Text>}
-      {isCompleted && <StarRating stars={item.stars} size="small" />}
-      {item.status === 'available' && (
-        <View style={styles.availableDot} />
-      )}
-      {item.status === 'in_progress' && (
-        <View style={styles.inProgressDot} />
-      )}
-    </Pressable>
+        <Text
+          style={[styles.levelConcept, isLocked && styles.lockedText]}
+          numberOfLines={1}
+        >
+          {item.concept}
+        </Text>
+        {isLocked && <Text style={styles.lockEmoji}>{'\uD83D\uDD12'}</Text>}
+        {isCompleted && <StarRating stars={item.stars} size="small" />}
+        {item.status === 'available' && (
+          <View style={styles.availableDot} />
+        )}
+        {item.status === 'in_progress' && (
+          <View style={styles.inProgressDot} />
+        )}
+      </Pressable>
+    </Animated.View>
   );
 }
 
@@ -127,11 +200,11 @@ export default function WorldDetailScreen() {
           columnWrapperStyle={styles.row}
           contentContainerStyle={styles.gridContent}
           renderItem={({ item, index }) => (
-            <LevelCard item={item} index={index} worldId={worldId ?? ''} />
+            <AnimatedLevelCard item={item} index={index} worldId={worldId ?? ''} />
           )}
           ListFooterComponent={
             bossLevel ? (
-              <LevelCard
+              <AnimatedLevelCard
                 item={bossLevel}
                 index={levels.length - 1}
                 worldId={worldId ?? ''}
@@ -226,6 +299,9 @@ const styles = StyleSheet.create({
   },
   completedCard: {
     borderColor: Colors.brand.primary + '50',
+  },
+  availableCard: {
+    borderWidth: 1.5,
   },
   lockedCard: {
     opacity: 0.45,

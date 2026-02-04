@@ -13,7 +13,4 @@ export function playSound(_type: SoundType): void {
   if (!soundEnabled) return;
 
   // No-op until audio files are added to assets/sounds/
-  // Future implementation:
-  // const sounds: Record<SoundType, Audio.Sound> = { ... };
-  // sounds[type]?.replayAsync();
 }
