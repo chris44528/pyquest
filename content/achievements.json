@@ -1,0 +1,166 @@
+[
+  {
+    "id": "first_exercise",
+    "name": "First Steps",
+    "description": "Complete your first exercise",
+    "icon": "\uD83D\uDC63",
+    "category": "progress",
+    "condition": { "type": "exercise_count", "value": 1 },
+    "xpReward": 50
+  },
+  {
+    "id": "first_level",
+    "name": "Level Up!",
+    "description": "Complete your first level",
+    "icon": "\uD83C\uDF1F",
+    "category": "progress",
+    "condition": { "type": "level_count", "value": 1 },
+    "xpReward": 50
+  },
+  {
+    "id": "five_levels",
+    "name": "High Five!",
+    "description": "Complete 5 levels",
+    "icon": "\u270B",
+    "category": "progress",
+    "condition": { "type": "level_count", "value": 5 },
+    "xpReward": 50
+  },
+  {
+    "id": "ten_levels",
+    "name": "Double Digits",
+    "description": "Complete 10 levels",
+    "icon": "\uD83C\uDFAF",
+    "category": "progress",
+    "condition": { "type": "level_count", "value": 10 },
+    "xpReward": 50
+  },
+  {
+    "id": "first_world",
+    "name": "World Conqueror",
+    "description": "Complete an entire world",
+    "icon": "\uD83C\uDF0D",
+    "category": "progress",
+    "condition": { "type": "world_complete", "value": 1 },
+    "xpReward": 50
+  },
+  {
+    "id": "xp_100",
+    "name": "XP Hunter",
+    "description": "Earn 100 total XP",
+    "icon": "\u2728",
+    "category": "progress",
+    "condition": { "type": "total_xp", "value": 100 },
+    "xpReward": 50
+  },
+  {
+    "id": "xp_500",
+    "name": "XP Collector",
+    "description": "Earn 500 total XP",
+    "icon": "\uD83D\uDCB0",
+    "category": "progress",
+    "condition": { "type": "total_xp", "value": 500 },
+    "xpReward": 50
+  },
+  {
+    "id": "xp_1000",
+    "name": "XP Master",
+    "description": "Earn 1000 total XP",
+    "icon": "\uD83D\uDC8E",
+    "category": "progress",
+    "condition": { "type": "total_xp", "value": 1000 },
+    "xpReward": 50
+  },
+  {
+    "id": "streak_3",
+    "name": "Getting Warmed Up",
+    "description": "Maintain a 3-day streak",
+    "icon": "\uD83D\uDD25",
+    "category": "streak",
+    "condition": { "type": "streak_days", "value": 3 },
+    "xpReward": 50
+  },
+  {
+    "id": "streak_7",
+    "name": "Week Warrior",
+    "description": "Maintain a 7-day streak",
+    "icon": "\uD83D\uDCAA",
+    "category": "streak",
+    "condition": { "type": "streak_days", "value": 7 },
+    "xpReward": 50
+  },
+  {
+    "id": "streak_14",
+    "name": "Fortnight Force",
+    "description": "Maintain a 14-day streak",
+    "icon": "\u26A1",
+    "category": "streak",
+    "condition": { "type": "streak_days", "value": 14 },
+    "xpReward": 50
+  },
+  {
+    "id": "streak_30",
+    "name": "Monthly Master",
+    "description": "Maintain a 30-day streak",
+    "icon": "\uD83C\uDFC6",
+    "category": "streak",
+    "condition": { "type": "streak_days", "value": 30 },
+    "xpReward": 50
+  },
+  {
+    "id": "streak_100",
+    "name": "Century Champion",
+    "description": "Maintain a 100-day streak",
+    "icon": "\uD83D\uDC51",
+    "category": "streak",
+    "condition": { "type": "streak_days", "value": 100 },
+    "xpReward": 50
+  },
+  {
+    "id": "no_hints_level",
+    "name": "No Training Wheels",
+    "description": "Complete a level without using any hints",
+    "icon": "\uD83E\uDDD1\u200D\uD83D\uDCBB",
+    "category": "skill",
+    "condition": { "type": "no_hints_level", "value": 1 },
+    "xpReward": 50
+  },
+  {
+    "id": "perfect_level",
+    "name": "Perfectionist",
+    "description": "Get 3 stars on a level (first try, no hints)",
+    "icon": "\uD83C\uDF1F",
+    "category": "skill",
+    "condition": { "type": "first_try_level", "value": 1 },
+    "xpReward": 50
+  },
+  {
+    "id": "speed_demon",
+    "name": "Speed Demon",
+    "description": "Complete a level in under 2 minutes",
+    "icon": "\u23F1\uFE0F",
+    "category": "skill",
+    "condition": { "type": "speed_level", "value": 120 },
+    "xpReward": 50
+  },
+  {
+    "id": "night_owl",
+    "name": "Night Owl",
+    "description": "Complete a level between 10 PM and 5 AM",
+    "icon": "\uD83E\uDD89",
+    "category": "secret",
+    "condition": { "type": "night_owl", "value": 1 },
+    "xpReward": 50,
+    "secret": true
+  },
+  {
+    "id": "perfectionist_5",
+    "name": "Star Collector",
+    "description": "Get 3 stars on 5 different levels",
+    "icon": "\u2B50",
+    "category": "secret",
+    "condition": { "type": "first_try_level", "value": 5 },
+    "xpReward": 50,
+    "secret": true
+  }
+]

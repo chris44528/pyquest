@@ -4,6 +4,7 @@ import { StatusBar } from 'expo-status-bar';
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { PythonProvider } from '@/components/code/PythonRunner';
+import { AchievementPopup } from '@/components/gamification/AchievementPopup';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,6 +29,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="world" />
       </Stack>
+      <AchievementPopup />
       <StatusBar style="auto" />
     </PythonProvider>
   );

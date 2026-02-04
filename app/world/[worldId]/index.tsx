@@ -1,20 +1,8 @@
 import { StyleSheet, View, Text, FlatList, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { useWorld, type LevelSummary } from '@/hooks/useWorld';
+import { StarRating } from '@/components/gamification/StarRating';
 import Colors from '@/constants/Colors';
-import type { StarRating } from '@/types/progression';
-
-function StarDisplay({ stars }: { stars: StarRating }) {
-  return (
-    <View style={styles.starsRow}>
-      {[1, 2, 3].map((s) => (
-        <Text key={s} style={[styles.starIcon, s <= stars ? styles.starEarned : styles.starEmpty]}>
-          {'\u2B50'}
-        </Text>
-      ))}
-    </View>
-  );
-}
 
 function LevelCard({ item, index, worldId }: { item: LevelSummary; index: number; worldId: string }) {
   const router = useRouter();
@@ -47,7 +35,7 @@ function LevelCard({ item, index, worldId }: { item: LevelSummary; index: number
             </Text>
           </View>
           {isLocked && <Text style={styles.lockEmoji}>{'\uD83D\uDD12'}</Text>}
-          {isCompleted && <StarDisplay stars={item.stars} />}
+          {isCompleted && <StarRating stars={item.stars} size="small" />}
         </View>
       </Pressable>
     );
@@ -83,7 +71,7 @@ function LevelCard({ item, index, worldId }: { item: LevelSummary; index: number
         {item.concept}
       </Text>
       {isLocked && <Text style={styles.lockEmoji}>{'\uD83D\uDD12'}</Text>}
-      {isCompleted && <StarDisplay stars={item.stars} />}
+      {isCompleted && <StarRating stars={item.stars} size="small" />}
       {item.status === 'available' && (
         <View style={styles.availableDot} />
       )}
@@ -275,20 +263,6 @@ const styles = StyleSheet.create({
   lockEmoji: {
     fontSize: 16,
     marginTop: 2,
-  },
-  starsRow: {
-    flexDirection: 'row',
-    gap: 2,
-    marginTop: 2,
-  },
-  starIcon: {
-    fontSize: 14,
-  },
-  starEarned: {
-    opacity: 1,
-  },
-  starEmpty: {
-    opacity: 0.3,
   },
   availableDot: {
     width: 8,
